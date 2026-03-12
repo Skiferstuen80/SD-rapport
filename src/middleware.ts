@@ -13,6 +13,6 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // Beskytt alt unntatt login-side, API-ruter og statiske filer
-    "/((?!login|api|_next/static|_next/image|favicon.ico).*)",
+    "/((?!login|api|skjerm|_next/static|_next/image|favicon.ico).*)",
   ],
 };

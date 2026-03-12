@@ -99,9 +99,9 @@ export default function HmsReportPanel() {
       <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
         {(["month", "quarter", "year"] as ReportType[]).map((t) => {
           const labels: Record<ReportType, string> = {
-            month: "Maaned",
+            month: "Måned",
             quarter: "Kvartal",
-            year: "Aar",
+            year: "År",
           };
           return (
             <button
@@ -118,7 +118,7 @@ export default function HmsReportPanel() {
       {/* Period selectors */}
       <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", marginBottom: "1rem" }}>
         <label>
-          Aar:{" "}
+          År:{" "}
           <select value={year} onChange={(e) => setYear(Number(e.target.value))} style={selectStyle}>
             {YEARS.map((y) => (
               <option key={y} value={y}>{y}</option>
@@ -139,7 +139,7 @@ export default function HmsReportPanel() {
 
         {reportType === "month" && (
           <label>
-            Maaned:{" "}
+            Måned:{" "}
             <select value={month} onChange={(e) => setMonth(Number(e.target.value))} style={selectStyle}>
               {MONTHS.map((m, i) => (
                 <option key={i + 1} value={i + 1}>{m}</option>
