@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"/c/UTV prosjekter/SD_rapport\" && npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm 2>&1 || true)",
+      "Bash(cd \"/c/UTV prosjekter/SD_rapport\" && npm init -y 2>&1 && sed -i 's/\"name\": \"SD_rapport\"/\"name\": \"sd-rapport\"/' package.json)",
+      "Bash(cd \"/c/UTV prosjekter/SD_rapport\" && npm install next@latest react@latest react-dom@latest typescript @types/react @types/node 2>&1)",
+      "Bash(cd \"/c/UTV prosjekter/SD_rapport\" && npm run build 2>&1)"
+    ]
+  }
+}
