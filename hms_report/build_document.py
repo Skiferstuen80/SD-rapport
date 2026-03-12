@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import io
 from datetime import datetime
+from pathlib import Path
 
 from docx import Document
 from docx.enum.section import WD_ORIENT
@@ -124,7 +125,18 @@ def _build_cover(doc: Document, config: dict) -> None:
     report_type = config.get("reportType", "quarter")
     period_label = config.get("periodLabel", f"{config.get('quarter', '')} {config['year']}")
 
-    for _ in range(6):
+    for _ in range(3):
+        doc.add_paragraph()
+
+    # Company logo
+    logo_path = Path(__file__).resolve().parent.parent / "public" / "logo-dark.png"
+    if logo_path.exists():
+        p = doc.add_paragraph()
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run = p.add_run()
+        run.add_picture(str(logo_path), width=Inches(3.5))
+
+    for _ in range(2):
         doc.add_paragraph()
 
     p = doc.add_paragraph()
@@ -145,13 +157,6 @@ def _build_cover(doc: Document, config: dict) -> None:
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.space_before = Pt(30)
-    run = p.add_run("Aage Haverstad AS")
-    run.font.name = FONT_NAME
-    run.font.size = Pt(18)
-    run.font.bold = True
-
-    p = doc.add_paragraph()
-    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     run = p.add_run(f"Generert: {datetime.now().strftime('%d.%m.%Y')}")
     run.font.name = FONT_NAME
     run.font.size = Pt(11)
@@ -169,8 +174,8 @@ def _build_toc(doc: Document, config: dict) -> None:
         f"{type_label} HMS",
         "1. Kort status",
         "2. Hendelser og avvik",
-        "3. Nokkelaktiviteter HMS",
-        "4. Sykefravaer",
+        "3. Nøkkelaktiviteter HMS",
+        "4. Sykefravær",
         "5. Tiltak neste periode",
         "6. Oversikt/Statistikk RUH:",
         "7. Oversikt/statistikk Kvalitetsavvik:",
@@ -190,7 +195,7 @@ def _build_metadata(doc: Document, config: dict) -> None:
     period_label = config.get("periodLabel", f"{config.get('quarter', '')} {config['year']}")
 
     _add_heading(doc, f"{type_label} HMS")
-    _add_body(doc, "Aage Haverstad AS", bold=True)
+    _add_body(doc, "Åge Haverstad AS", bold=True)
     _add_body(doc, f"Periode: {period_label}")
     now = datetime.now()
     _add_body(doc, f"Dato: {now.strftime('%d. %B %Y')}")
@@ -213,7 +218,7 @@ def _build_section2(doc: Document, data: dict) -> None:
 
     rows_data = [
         ("Skade/personulykke", "0", ""),
-        ("Uoenskede hendelser (RUH)", str(data["rue"]["total"]), ""),
+        ("Uønskede hendelser (RUH)", str(data["rue"]["total"]), ""),
         ("Kvalitetsavvik (QD)", str(data["qd"]["total"]), ""),
     ]
     for i, (col1, col2, col3) in enumerate(rows_data):
@@ -224,24 +229,24 @@ def _build_section2(doc: Document, data: dict) -> None:
 
     closed = data["rue"]["byStatus"].get("Lukket", 0)
     open_rue = (
-        data["rue"]["byStatus"].get("Aapen", 0)
+        data["rue"]["byStatus"].get("Åpen", 0)
         + data["rue"]["byStatus"].get("Ny", 0)
         + data["rue"]["byStatus"].get("Ubehandlet", 0)
     )
     _add_body(doc, f"Lukket avvik/RUH: {closed}")
-    _add_body(doc, f"Aapne RUH: {open_rue}")
+    _add_body(doc, f"Åpne RUH: {open_rue}")
     _add_body(doc, f"Totalt: {data['rue']['total']} stk.")
 
 
 def _build_section3(doc: Document, data: dict) -> None:
-    _add_heading(doc, "3. Nokkelaktiviteter HMS")
+    _add_heading(doc, "3. Nøkkelaktiviteter HMS")
     config = data["config"]
     nokkel = config["manual"]["nøkkelaktiviteter"]
 
     table = doc.add_table(rows=5, cols=3)
     table.style = "Table Grid"
 
-    for i, h in enumerate(["Aktivitet", "Gjennomfoert", "Kommentar"]):
+    for i, h in enumerate(["Aktivitet", "Gjennomført", "Kommentar"]):
         _header_cell(table.rows[0], i, h)
 
     vr = data["vernerunder"]
@@ -253,7 +258,7 @@ def _build_section3(doc: Document, data: dict) -> None:
 
     activities = [
         ("Vernerunder", f"{vr['total']} stk", vr_comment),
-        ("HMS-moete", "Ja" if nokkel["hmsMøte"]["gjennomført"] else "Nei", nokkel["hmsMøte"]["kommentar"]),
+        ("HMS-møte", "Ja" if nokkel["hmsMøte"]["gjennomført"] else "Nei", nokkel["hmsMøte"]["kommentar"]),
         ("Risikovurdering", "Ja" if nokkel["risikovurdering"]["gjennomført"] else "Nei", nokkel["risikovurdering"]["kommentar"]),
         ("SJA (Sikker Jobb Analyse)", f"{sja['total']} stk", sja_comment),
     ]
@@ -265,7 +270,7 @@ def _build_section3(doc: Document, data: dict) -> None:
 
 
 def _build_section4(doc: Document, config: dict) -> None:
-    _add_heading(doc, "4. Sykefravaer")
+    _add_heading(doc, "4. Sykefravær")
     sf_list = config["manual"]["sykefravær"]
     start_month = int(config["dateRange"]["start"][5:7])
     end_month = int(config["dateRange"]["end"][5:7])
@@ -285,7 +290,7 @@ def _build_section4(doc: Document, config: dict) -> None:
     avg = total_pct / count if count else 0
     _add_body(doc, f"Sykmeldinger: {total_syk}")
     _add_body(doc, f"Egenmeldinger: {total_egen}")
-    _add_body(doc, f"Fravaersprosent: {avg:.1f}%")
+    _add_body(doc, f"Fraværsprosent: {avg:.1f}%")
 
 
 def _build_section5(doc: Document, config: dict) -> None:
@@ -295,7 +300,7 @@ def _build_section5(doc: Document, config: dict) -> None:
 
 
 def _build_rue_table(doc: Document, rows: list[dict]) -> None:
-    headers = ["Hendelse", "Innsendt", "Prosjekt", "Tittel", "Nr.", "Type", "Omfattet", "Aarsak"]
+    headers = ["Hendelse", "Innsendt", "Prosjekt", "Tittel", "Nr.", "Type", "Omfattet", "Årsak"]
     table = doc.add_table(rows=len(rows) + 1, cols=len(headers))
     table.style = "Table Grid"
 
@@ -321,7 +326,7 @@ def _build_section6(doc: Document, data: dict, charts: dict[str, bytes]) -> None
     _add_body(
         doc,
         f"I {period_label} ble det registrert "
-        f"{data['rue']['total']} uoenskede hendelser (RUH).",
+        f"{data['rue']['total']} uønskede hendelser (RUH).",
     )
 
     _add_chart_row(doc, charts["rueEventType"], charts["rueEventInvolved"], charts["rueCauseOfEvent"])
@@ -329,16 +334,16 @@ def _build_section6(doc: Document, data: dict, charts: dict[str, bytes]) -> None
     _add_heading(doc, "Hendelsene omfattet", level=2)
     _add_chart(doc, charts["rueEventInvolvedBar"])
 
-    _add_heading(doc, "Rapporteringsfrekvens per maaned", level=2)
+    _add_heading(doc, "Rapporteringsfrekvens per måned", level=2)
     _add_chart(doc, charts["rueMonthlyFrequency"])
 
     _add_heading(doc, "Hendelsesliste", level=2)
-    _add_body(doc, f"Totalt {len(data['rue']['rows'])} hendelser, sortert nyeste foerst.")
+    _add_body(doc, f"Totalt {len(data['rue']['rows'])} hendelser, sortert nyeste først.")
     _build_rue_table(doc, data["rue"]["rows"])
 
 
 def _build_qd_table(doc: Document, rows: list[dict]) -> None:
-    headers = ["Avdekket", "Innsendt", "Prosjekt", "Tittel", "Nr.", "Angaar", "I forhold til", "Aarsak"]
+    headers = ["Avdekket", "Innsendt", "Prosjekt", "Tittel", "Nr.", "Angår", "I forhold til", "Årsak"]
     table = doc.add_table(rows=len(rows) + 1, cols=len(headers))
     table.style = "Table Grid"
 
@@ -370,17 +375,17 @@ def _build_section7(doc: Document, data: dict, charts: dict[str, bytes]) -> None
     _add_chart_row(doc, charts["qdConcerning"], charts["qdRelatesTo"], charts["qdCause"])
 
     _add_heading(doc, "Avviksliste", level=2)
-    _add_body(doc, f"Totalt {len(data['qd']['rows'])} avvik, sortert nyeste foerst.")
+    _add_body(doc, f"Totalt {len(data['qd']['rows'])} avvik, sortert nyeste først.")
     _build_qd_table(doc, data["qd"]["rows"])
 
 
 def _build_section8(doc: Document, data: dict) -> None:
     _add_heading(doc, "8. Samlet oversikt HMSK:")
     cfg = data["config"]
-    _add_body(doc, f"Maanedlig oversikt for {cfg['year']}.")
+    _add_body(doc, f"Månedlig oversikt for {cfg['year']}.")
 
     rows = data["monthlySummary"]
-    headers = ["Maaned", "RUH", "RUH-frekv.", "SJA", "Vernerunder", "Kvalitetsavvik", "Sykefravaer %", "Ans."]
+    headers = ["Måned", "RUH", "RUH-frekv.", "SJA", "Vernerunder", "Kvalitetsavvik", "Sykefravær %", "Ans."]
     table = doc.add_table(rows=len(rows) + 2, cols=len(headers))
     table.style = "Table Grid"
 

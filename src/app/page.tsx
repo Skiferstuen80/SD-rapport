@@ -11,7 +11,10 @@ export default async function Home() {
   return (
     <main style={{ padding: "2rem", fontFamily: "sans-serif" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h1>SD Rapport</h1>
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <img src="/logo.svg" alt="Åge Haverstad AS" style={{ height: "45px", filter: "invert(1)" }} />
+          <h1 style={{ margin: 0 }}>SD Rapport</h1>
+        </div>
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <span>Hei, {user?.name}!</span>
           <LogoutButton />

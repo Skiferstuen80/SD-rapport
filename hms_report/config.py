@@ -91,9 +91,9 @@ def get_period_label(
 def get_report_title(report_type: ReportType) -> str:
     """Return the report title based on type."""
     titles = {
-        "month": "HMS-MAANEDSRAPPORT",
+        "month": "HMS-MÅNEDSRAPPORT",
         "quarter": "HMS-KVARTALSRAPPORT",
-        "year": "HMS-AARSRAPPORT",
+        "year": "HMS-ÅRSRAPPORT",
     }
     return titles[report_type]
 
@@ -101,9 +101,9 @@ def get_report_title(report_type: ReportType) -> str:
 def get_report_type_label(report_type: ReportType) -> str:
     """Norwegian label for the report type."""
     labels = {
-        "month": "Maanedsrapport",
+        "month": "Månedsrapport",
         "quarter": "Kvartalsrapport",
-        "year": "Aarsrapport",
+        "year": "Årsrapport",
     }
     return labels[report_type]
 

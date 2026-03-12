@@ -2,7 +2,7 @@
 """
 HMS-Rapport Generator
 
-Generates HMS reports (month, quarter, or year) for Aage Haverstad AS
+Generates HMS reports (month, quarter, or year) for Åge Haverstad AS
 by fetching data from SmartDok and building a .docx document.
 
 Usage:
@@ -40,9 +40,9 @@ def _make_filename(config: dict) -> str:
     if report_type == "month":
         month = config.get("month", 1)
         month_name = MONTH_NUMBER_TO_NAME[month]
-        return f"HMS-Maanedsrapport-{month_name}-{year}.docx"
+        return f"HMS-Månedsrapport-{month_name}-{year}.docx"
     elif report_type == "year":
-        return f"HMS-Aarsrapport-{year}.docx"
+        return f"HMS-Årsrapport-{year}.docx"
     else:
         quarter = config.get("quarter", "Q4")
         return f"HMS-Kvartalsrapport-{quarter}-{year}.docx"
@@ -59,7 +59,7 @@ def main() -> None:
     parser.add_argument("--year", "-y", type=int, default=2025)
     parser.add_argument("--month", "-m", type=int, choices=range(1, 13),
                         metavar="1-12",
-                        help="Maaned (kun for --type month)")
+                        help="Måned (kun for --type month)")
     parser.add_argument("--config", "-c", help="Sti til JSON-konfigurasjonsfil")
     parser.add_argument("--output-json", action="store_true",
                         help="Skriv JSON med base64-encoded docx til stdout")
@@ -115,7 +115,7 @@ def main() -> None:
     if not args.output_json:
         print("=" * 60)
         print(f"  HMS-{type_label} {config['periodLabel']}")
-        print("  Aage Haverstad AS")
+        print("  Åge Haverstad AS")
         print("=" * 60)
 
     start_time = time.time()

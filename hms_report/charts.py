@@ -90,16 +90,16 @@ def generate_all_charts(data: dict) -> dict[str, bytes]:
     charts = {
         "rueEventType": render_pie_chart("Type hendelse", data["rue"]["byEventType"]),
         "rueEventInvolved": render_pie_chart("Hendelsen omfattet", data["rue"]["byEventInvolved"]),
-        "rueCauseOfEvent": render_pie_chart("Aarsak til hendelsen", data["rue"]["byCauseOfEvent"]),
+        "rueCauseOfEvent": render_pie_chart("Årsak til hendelsen", data["rue"]["byCauseOfEvent"]),
         "rueEventInvolvedBar": render_horizontal_bar_chart(
             "Hendelsene omfattet", data["rue"]["byEventInvolved"]
         ),
         "rueMonthlyFrequency": render_line_chart(
-            "Rapporteringsfrekvens per maaned", data["rue"]["byMonth"]
+            "Rapporteringsfrekvens per måned", data["rue"]["byMonth"]
         ),
         "qdConcerning": render_pie_chart("Angaar", data["qd"]["byConcerning"]),
         "qdRelatesTo": render_pie_chart("I forhold til", data["qd"]["byRelatesTo"]),
-        "qdCause": render_pie_chart("Aarsak", data["qd"]["byCause"]),
+        "qdCause": render_pie_chart("Årsak", data["qd"]["byCause"]),
     }
 
     print("  8 diagrammer generert")
