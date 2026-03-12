@@ -1,0 +1,115 @@
+{
+  "quarter": "Q4",
+  "year": 2025,
+  "dateRange": {
+    "start": "2025-10-01",
+    "end": "2025-12-31"
+  },
+  "utarbeidetAv": "[Fyll inn navn]",
+  "manual": {
+    "kortStatus": "[Fyll inn kort status for kvartalet]",
+    "sykefravær": [
+      {
+        "month": "Januar",
+        "sykmeldinger": 0,
+        "egenmeldinger": 0,
+        "fraværProsent": 0,
+        "antallAnsatte": 0
+      },
+      {
+        "month": "Februar",
+        "sykmeldinger": 0,
+        "egenmeldinger": 0,
+        "fraværProsent": 0,
+        "antallAnsatte": 0
+      },
+      {
+        "month": "Mars",
+        "sykmeldinger": 0,
+        "egenmeldinger": 0,
+        "fraværProsent": 0,
+        "antallAnsatte": 0
+      },
+      {
+        "month": "April",
+        "sykmeldinger": 0,
+        "egenmeldinger": 0,
+        "fraværProsent": 0,
+        "antallAnsatte": 0
+      },
+      {
+        "month": "Mai",
+        "sykmeldinger": 0,
+        "egenmeldinger": 0,
+        "fraværProsent": 0,
+        "antallAnsatte": 0
+      },
+      {
+        "month": "Juni",
+        "sykmeldinger": 0,
+        "egenmeldinger": 0,
+        "fraværProsent": 0,
+        "antallAnsatte": 0
+      },
+      {
+        "month": "Juli",
+        "sykmeldinger": 0,
+        "egenmeldinger": 0,
+        "fraværProsent": 0,
+        "antallAnsatte": 0
+      },
+      {
+        "month": "August",
+        "sykmeldinger": 0,
+        "egenmeldinger": 0,
+        "fraværProsent": 0,
+        "antallAnsatte": 0
+      },
+      {
+        "month": "September",
+        "sykmeldinger": 0,
+        "egenmeldinger": 0,
+        "fraværProsent": 0,
+        "antallAnsatte": 0
+      },
+      {
+        "month": "Oktober",
+        "sykmeldinger": 0,
+        "egenmeldinger": 0,
+        "fraværProsent": 0,
+        "antallAnsatte": 0
+      },
+      {
+        "month": "November",
+        "sykmeldinger": 0,
+        "egenmeldinger": 0,
+        "fraværProsent": 0,
+        "antallAnsatte": 0
+      },
+      {
+        "month": "Desember",
+        "sykmeldinger": 0,
+        "egenmeldinger": 0,
+        "fraværProsent": 0,
+        "antallAnsatte": 0
+      }
+    ],
+    "nøkkelaktiviteter": {
+      "vernerunder": {
+        "antall": 0,
+        "kommentar": ""
+      },
+      "hmsMøte": {
+        "gjennomført": false,
+        "kommentar": ""
+      },
+      "risikovurdering": {
+        "gjennomført": false,
+        "kommentar": ""
+      }
+    },
+    "tiltakNesteKvartal": [
+      "[Fyll inn tiltak]"
+    ]
+  }
+}

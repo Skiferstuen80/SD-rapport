@@ -1,0 +1,2583 @@
+{
+  "_metadata": {
+    "beskrivelse": "Komplett SmartDok API-referanse (181 operasjoner, 127 stier)",
+    "base_url": "https://api.smartdok.no",
+    "swagger_url": "https://api.smartdok.no/swagger/docs/v1",
+    "companyId": 225,
+    "generert": "2026-02-24",
+    "paginering": "Listeendepunkter returnerer {Count, Offset, TotalCount, Items[]}. Bruk ?offset=N&count=M.",
+    "autentisering": "POST /Authorize/ApiToken med {\"Token\":\"<API_TOKEN>\"} gir session-token (ren streng). Bruk Authorization: Bearer <token>. Utloeper etter ~1 time."
+  },
+
+  "Authorize": {
+    "POST /Authorize/ApiToken": {
+      "metode": "POST",
+      "sti": "/Authorize/ApiToken",
+      "parametere": {
+        "body": "{\"Token\": \"<API_TOKEN>\"} (JSON)"
+      },
+      "respons_felter": {
+        "_type": "string (ren session-token, ikke JSON-objekt)"
+      },
+      "merknad": "Session-tokenet varer ca 1 time. Ingen refresh — autentiser paa nytt ved 401.",
+      "tilgang": "OK"
+    },
+    "POST /Authorize/ApiToken/Renew": {
+      "metode": "POST",
+      "sti": "/Authorize/ApiToken/Renew",
+      "parametere": {},
+      "respons_felter": {
+        "_type": "string (fornyet session-token)"
+      },
+      "merknad": "Fornyer eksisterende session-token.",
+      "tilgang": "OK"
+    },
+    "GET /Authorize/PublicKeys": {
+      "metode": "GET",
+      "sti": "/Authorize/PublicKeys",
+      "parametere": {},
+      "respons_felter": {
+        "Exponent": "string",
+        "Modulus": "string"
+      },
+      "merknad": "Returnerer offentlige noekler (RSA) for signaturverifikasjon.",
+      "tilgang": "OK"
+    }
+  },
+
+  "Additions": {
+    "GET /Additions": {
+      "metode": "GET",
+      "sti": "/Additions",
+      "parametere": {
+        "additionNumber": "(valgfri) Filtrer paa tilleggsnummer",
+        "additionName": "(valgfri) Filtrer paa tilleggsnavn",
+        "onlyAddition": "(valgfri) Kun fastbeloepstillegg",
+        "onlyUnitAddition": "(valgfri) Kun enhetstillegg",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive"
+      },
+      "respons_felter": {
+        "Id": "integer",
+        "Number": "string",
+        "Name": "string",
+        "Addition": "boolean (fastbeloepstillegg)",
+        "UnitAddition": "boolean (enhetstillegg/per time)",
+        "IsActive": "boolean",
+        "Export": "boolean",
+        "Rate": "number",
+        "HourlyCost": "number",
+        "Order": "integer (sorteringsrekkefoelje)",
+        "IsCommentRequired": "boolean",
+        "IsOvertime": "boolean"
+      },
+      "merknad": "Returnerer flat liste (ikke paginert). 13 tillegg hos AH AS.",
+      "tilgang": "OK"
+    },
+    "POST /Additions": {
+      "metode": "POST",
+      "sti": "/Additions",
+      "parametere": {
+        "body": "Addition-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppretter nytt tillegg.",
+      "tilgang": "OK"
+    },
+    "GET /Additions/{id}": {
+      "metode": "GET",
+      "sti": "/Additions/{id}",
+      "parametere": {
+        "id": "(paakreved) Tillegg-Id"
+      },
+      "respons_felter": {
+        "_same_as": "GET /Additions (enkelt objekt)"
+      },
+      "merknad": "Henter enkelt tillegg. Returnerer 404 om Id ikke finnes.",
+      "tilgang": "OK"
+    },
+    "PUT /Additions/{id}": {
+      "metode": "PUT",
+      "sti": "/Additions/{id}",
+      "parametere": {
+        "id": "(paakreved) Tillegg-Id",
+        "body": "Oppdatert Addition-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppdaterer eksisterende tillegg.",
+      "tilgang": "OK"
+    }
+  },
+
+  "Allowance": {
+    "GET /Allowance": {
+      "metode": "GET",
+      "sti": "/Allowance",
+      "parametere": {
+        "number": "(valgfri) Filtrer paa nummer",
+        "name": "(valgfri) Filtrer paa navn",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive"
+      },
+      "respons_felter": {
+        "Id": "integer",
+        "Name": "string",
+        "Number": "string",
+        "CompanyId": "integer",
+        "IsActive": "boolean",
+        "Rate": "number (kronesats)",
+        "Order": "integer",
+        "IsCommentRequired": "boolean",
+        "IsExport": "boolean"
+      },
+      "merknad": "Paginert. 2 godtgjoerelser hos AH AS (Brakkediett, Diett).",
+      "tilgang": "OK"
+    },
+    "POST /Allowance": {
+      "metode": "POST",
+      "sti": "/Allowance",
+      "parametere": {
+        "body": "Allowance-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppretter ny godtgjoerelse.",
+      "tilgang": "OK"
+    },
+    "GET /Allowance/{id}": {
+      "metode": "GET",
+      "sti": "/Allowance/{id}",
+      "parametere": {
+        "id": "(paakreved) Godtgjoerelse-Id"
+      },
+      "respons_felter": {
+        "_same_as": "GET /Allowance (enkelt objekt)"
+      },
+      "merknad": "Henter enkelt godtgjoerelse. 404 hvis Id ikke finnes.",
+      "tilgang": "OK"
+    },
+    "PUT /Allowance/{id}": {
+      "metode": "PUT",
+      "sti": "/Allowance/{id}",
+      "parametere": {
+        "id": "(paakreved) Godtgjoerelse-Id",
+        "body": "Oppdatert Allowance-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "DEPRECATED. Bruk PUT /v2/Allowance/{id} i stedet.",
+      "deprecated": true,
+      "tilgang": "OK"
+    },
+    "PUT /v2/Allowance/{id}": {
+      "metode": "PUT",
+      "sti": "/v2/Allowance/{id}",
+      "parametere": {
+        "id": "(paakreved) Godtgjoerelse-Id",
+        "body": "Oppdatert Allowance-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "v2-versjon av oppdatering. Erstatter deprecated PUT /Allowance/{id}.",
+      "tilgang": "OK"
+    }
+  },
+
+  "Areas": {
+    "GET /Areas": {
+      "metode": "GET",
+      "sti": "/Areas",
+      "parametere": {
+        "areaNumber": "(valgfri) Filtrer paa omraadenummer",
+        "areaName": "(valgfri) Filtrer paa omraadenavn",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive",
+        "updatedSince": "(valgfri) ISO 8601 dato"
+      },
+      "respons_felter": {},
+      "merknad": "Krever AreaRead-tilgang. Returnerer 401 for vaar API-noekkel.",
+      "tilgang": "401"
+    },
+    "GET /Areas/{id}": {
+      "metode": "GET",
+      "sti": "/Areas/{id}",
+      "parametere": {
+        "id": "(paakreved) Omraade-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Krever AreaRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "PUT /Areas/{id}": {
+      "metode": "PUT",
+      "sti": "/Areas/{id}",
+      "parametere": {
+        "id": "(paakreved) Omraade-Id",
+        "body": "Oppdatert Area-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Krever AreaRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "GET /SubProjects/{subProjectId}/Areas": {
+      "metode": "GET",
+      "sti": "/SubProjects/{subProjectId}/Areas",
+      "parametere": {
+        "subProjectId": "(paakreved) Delprosjekt-Id",
+        "areaNumber": "(valgfri) Filtrer paa omraadenummer",
+        "areaName": "(valgfri) Filtrer paa omraadenavn",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive",
+        "updatedSince": "(valgfri) ISO 8601 dato"
+      },
+      "respons_felter": {},
+      "merknad": "Henter omraader for et bestemt delprosjekt. Krever gyldig subProjectId.",
+      "tilgang": "OK"
+    },
+    "POST /SubProjects/{subProjectId}/Areas": {
+      "metode": "POST",
+      "sti": "/SubProjects/{subProjectId}/Areas",
+      "parametere": {
+        "subProjectId": "(paakreved) Delprosjekt-Id",
+        "body": "Area-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppretter nytt omraade under et delprosjekt.",
+      "tilgang": "OK"
+    },
+    "GET /SubProjects/{subProjectId}/Areas/NextNumber": {
+      "metode": "GET",
+      "sti": "/SubProjects/{subProjectId}/Areas/NextNumber",
+      "parametere": {
+        "subProjectId": "(paakreved) Delprosjekt-Id"
+      },
+      "respons_felter": {
+        "_type": "string (neste ledige omraadenummer)"
+      },
+      "merknad": "Henter neste ledige omraadenummer for et delprosjekt.",
+      "tilgang": "OK"
+    }
+  },
+
+  "Customers": {
+    "GET /Customers": {
+      "metode": "GET",
+      "sti": "/Customers",
+      "parametere": {
+        "customerNumber": "(valgfri) Filtrer paa kundenummer",
+        "customerName": "(valgfri) Filtrer paa kundenavn",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive",
+        "updatedSince": "(valgfri) ISO 8601 dato"
+      },
+      "respons_felter": {},
+      "merknad": "Krever CustomersRead-tilgang. 401 for vaar API-noekkel.",
+      "tilgang": "401"
+    },
+    "POST /Customers": {
+      "metode": "POST",
+      "sti": "/Customers",
+      "parametere": {
+        "body": "Customer-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Krever CustomersRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "GET /Customers/{id}": {
+      "metode": "GET",
+      "sti": "/Customers/{id}",
+      "parametere": {
+        "id": "(paakreved) Kunde-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Krever CustomersRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "PUT /Customers/{id}": {
+      "metode": "PUT",
+      "sti": "/Customers/{id}",
+      "parametere": {
+        "id": "(paakreved) Kunde-Id",
+        "body": "Oppdatert Customer-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "DEPRECATED. Bruk PUT /v2/Customers/{id}.",
+      "deprecated": true,
+      "tilgang": "401"
+    },
+    "PUT /v2/Customers/{id}": {
+      "metode": "PUT",
+      "sti": "/v2/Customers/{id}",
+      "parametere": {
+        "id": "(paakreved) Kunde-Id",
+        "body": "Oppdatert Customer-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "v2-versjon av kundeoppdatering. Krever CustomersRead-tilgang. 401.",
+      "tilgang": "401"
+    }
+  },
+
+  "Departments": {
+    "GET /Departments": {
+      "metode": "GET",
+      "sti": "/Departments",
+      "parametere": {
+        "departmentNumber": "(valgfri) Filtrer paa avdelingsnummer",
+        "departmentName": "(valgfri) Filtrer paa avdelingsnavn",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive",
+        "updatedSince": "(valgfri) ISO 8601 dato"
+      },
+      "respons_felter": {
+        "Id": "integer",
+        "Name": "string",
+        "Number": "string",
+        "IsActive": "boolean",
+        "Updated": "string (ISO 8601, kan vaere null)"
+      },
+      "merknad": "Paginert. 11 avdelinger hos AH AS.",
+      "tilgang": "OK"
+    },
+    "POST /Departments": {
+      "metode": "POST",
+      "sti": "/Departments",
+      "parametere": {
+        "body": "Department-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppretter ny avdeling.",
+      "tilgang": "OK"
+    },
+    "GET /Departments/{id}": {
+      "metode": "GET",
+      "sti": "/Departments/{id}",
+      "parametere": {
+        "id": "(paakreved) Avdeling-Id"
+      },
+      "respons_felter": {
+        "_same_as": "GET /Departments (enkelt objekt)"
+      },
+      "merknad": "Henter enkelt avdeling. 404 om Id ikke finnes.",
+      "tilgang": "OK"
+    },
+    "PUT /Departments/{id}": {
+      "metode": "PUT",
+      "sti": "/Departments/{id}",
+      "parametere": {
+        "id": "(paakreved) Avdeling-Id",
+        "body": "Oppdatert Department-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppdaterer eksisterende avdeling.",
+      "tilgang": "OK"
+    }
+  },
+
+  "Forms": {
+    "GET /Forms": {
+      "metode": "GET",
+      "sti": "/Forms",
+      "deprecated": true,
+      "parametere": {
+        "startDate": "(paakreved) ISO 8601 startdato",
+        "endDate": "(paakreved) ISO 8601 sluttdato",
+        "moduleId": "(valgfri) 1=Prosjekt, 2=Maskin",
+        "moduleInstanceId": "(valgfri) Prosjekt- eller maskin-Id",
+        "moduleSubInstanceId": "(valgfri) Delprosjekt-Id",
+        "formDefinitionId": "(valgfri) DefFormId for aa filtrere paa skjematype",
+        "categoryId": "(valgfri) Kategori-Id",
+        "temporaryForms": "(valgfri) Inkluder midlertidige (default false)"
+      },
+      "respons_felter": {
+        "FormId": "integer",
+        "FilledOutDate": "string (ISO 8601)",
+        "FollowUpLater": "boolean",
+        "FilledOutBy": "string (navn)",
+        "Subject": "string",
+        "Serialnumber": "integer",
+        "TemporarilySaved": "boolean",
+        "ModuleId": "integer (1=Prosjekt, 2=Maskin)",
+        "ModuleInstanceId": "integer",
+        "ModuleSubInstanceId": "integer|null",
+        "DefFormId": "integer (stort tall, f.eks. 3625216538568122)",
+        "DefFormName": "string",
+        "FilledOutById": "string (UUID)",
+        "SignaturePictureId": "integer|null",
+        "SignatureName": "string",
+        "SignatureEmail": "string",
+        "FormStatusId": "integer|null",
+        "MachineId": "integer|null",
+        "ProjectId": "integer",
+        "Elements": "array [{Id, FormControlId, FormDataId, Pictures[], TextBoxValue, Settings}]"
+      },
+      "merknad": "DEPRECATED men fungerer fortsatt (feb 2026). MAKS 32 dagers intervall — loop i blokker. 3993 skjemaer totalt. Returnerer fulle Elements. Bruk v2 for kun metadata.",
+      "tilgang": "OK"
+    },
+    "GET /Forms/{id}": {
+      "metode": "GET",
+      "sti": "/Forms/{id}",
+      "deprecated": true,
+      "parametere": {
+        "id": "(paakreved) FormId"
+      },
+      "respons_felter": {
+        "_same_as": "GET /Forms (enkelt objekt med Elements)"
+      },
+      "merknad": "DEPRECATED. Henter ett utfylt skjema med alle elementer.",
+      "tilgang": "OK"
+    },
+    "GET /Forms/v2": {
+      "metode": "GET",
+      "sti": "/Forms/v2",
+      "parametere": {
+        "lastUpdatedSince": "(valgfri) ISO 8601 dato — kun skjemaer oppdatert etter denne dato",
+        "categoryId": "(valgfri) Kategori-Id"
+      },
+      "respons_felter": {
+        "Id": "integer",
+        "FilledOutDate": "string (ISO 8601)",
+        "FilledOutBy": "string (navn)",
+        "FilledOutById": "string (UUID)",
+        "Subject": "string",
+        "SerialNumber": "integer",
+        "FormTemplateId": "integer (tilsvarer DefFormId)",
+        "ModuleType": "string ('Project' eller 'Machine')",
+        "MainSerialNumber": "string",
+        "ProjectId": "integer|null",
+        "SubProjectId": "integer|null",
+        "MachineId": "integer|null",
+        "LastUpdated": "string (ISO 8601)"
+      },
+      "merknad": "v2 returnerer kun metadata (INGEN Elements). 3993 skjemaer. Bruk /Forms/v2/{id}/elements for aa hente feltdata. Ingen 32-dagers begrensning.",
+      "tilgang": "OK"
+    },
+    "GET /Forms/v2/Machine": {
+      "metode": "GET",
+      "sti": "/Forms/v2/Machine",
+      "parametere": {
+        "lastUpdatedSince": "(valgfri) ISO 8601 dato",
+        "categoryId": "(valgfri) Kategori-Id",
+        "machineId": "(valgfri) Filtrer paa maskin-Id"
+      },
+      "respons_felter": {
+        "_same_as": "GET /Forms/v2 (MachineId er alltid satt)"
+      },
+      "merknad": "Kun maskinskjemaer. 513 skjemaer hos AH AS.",
+      "tilgang": "OK"
+    },
+    "GET /Forms/v2/Project": {
+      "metode": "GET",
+      "sti": "/Forms/v2/Project",
+      "parametere": {
+        "lastUpdatedSince": "(valgfri) ISO 8601 dato",
+        "categoryId": "(valgfri) Kategori-Id",
+        "projectId": "(valgfri) Filtrer paa prosjekt-Id",
+        "subProjectId": "(valgfri) Filtrer paa delprosjekt-Id"
+      },
+      "respons_felter": {
+        "_same_as": "GET /Forms/v2 (ProjectId er alltid satt)"
+      },
+      "merknad": "Kun prosjektskjemaer. 3480 skjemaer hos AH AS.",
+      "tilgang": "OK"
+    },
+    "GET /Forms/v2/{formDataId}": {
+      "metode": "GET",
+      "sti": "/Forms/v2/{formDataId}",
+      "parametere": {
+        "formDataId": "(paakreved) Skjema-Id"
+      },
+      "respons_felter": {
+        "_same_as": "GET /Forms/v2 (enkelt objekt)"
+      },
+      "merknad": "Henter metadata for ett enkelt skjema.",
+      "tilgang": "OK"
+    },
+    "GET /Forms/v2/{formDataId}/elements": {
+      "metode": "GET",
+      "sti": "/Forms/v2/{formDataId}/elements",
+      "parametere": {
+        "formDataId": "(paakreved) Skjema-Id",
+        "ordinals": "(valgfri) Array med ordinaler aa hente",
+        "offset": "(valgfri) Startposisjon",
+        "count": "(valgfri) Antall elementer"
+      },
+      "respons_felter": {
+        "Elements": "array [{Id, FormControlId, FormDataId, Pictures[], TextBoxValue, Settings}]"
+      },
+      "merknad": "Henter utfylte felter for ett skjema. Bruk FormControlId mot /FormDefinitions for aa forstaa hva feltene betyr.",
+      "tilgang": "OK"
+    },
+    "POST /Forms/v2/elements": {
+      "metode": "POST",
+      "sti": "/Forms/v2/elements",
+      "parametere": {
+        "body": "Array med formDataId-er (JSON)"
+      },
+      "respons_felter": {
+        "Elements": "array (elementer for flere skjemaer samtidig)"
+      },
+      "merknad": "Batch-henting av elementer for flere skjemaer i ett kall. Mer effektivt enn aa hente ett og ett.",
+      "tilgang": "OK"
+    },
+    "GET /Forms/v2/{formDataId}/pdf": {
+      "metode": "GET",
+      "sti": "/Forms/v2/{formDataId}/pdf",
+      "parametere": {
+        "formDataId": "(paakreved) Skjema-Id"
+      },
+      "respons_felter": {
+        "FileSize": "integer",
+        "FileDate": "string",
+        "Filename": "string",
+        "DownloadUrl": "string (pre-signert S3-URL)"
+      },
+      "merknad": "Genererer PDF for ett utfylt skjema. DownloadUrl gyldig i 24 timer.",
+      "tilgang": "OK"
+    }
+  },
+
+  "FormDefinitions": {
+    "GET /FormDefinitions/{id}": {
+      "metode": "GET",
+      "sti": "/FormDefinitions/{id}",
+      "parametere": {
+        "id": "(paakreved) DefFormId (stort tall, f.eks. 7589980306400505)"
+      },
+      "respons_felter": {
+        "Id": "integer (DefFormId)",
+        "Name": "string (skjemanavn)",
+        "Elements": "array [{Id (=FormControlId), Label, Type, Settings, ...}]"
+      },
+      "merknad": "Henter skjemadefinisjon med alle felter. Bruk FormControlId fra utfylte skjemaer for aa mappe mot Elements[].Id her for aa faa feltets Label.",
+      "tilgang": "OK"
+    }
+  },
+
+  "Goods": {
+    "GET /Goods": {
+      "metode": "GET",
+      "sti": "/Goods",
+      "parametere": {
+        "goodsNumber": "(valgfri) Filtrer paa varenummer",
+        "goodsName": "(valgfri) Filtrer paa varenavn",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive"
+      },
+      "respons_felter": {
+        "Id": "integer",
+        "Name": "string",
+        "Number": "string",
+        "Amount": "number (lagerbeholdning)",
+        "UnitId": "integer",
+        "Unit": "{Id: integer, Name: string}",
+        "IsActive": "boolean",
+        "IsProduction": "boolean",
+        "Price": "number",
+        "InternalCost": "number|null",
+        "CategoryId": "integer",
+        "Category": "{Id: integer, Name: string, IsProduction: boolean, IsActive: boolean}",
+        "Barcodes": "array"
+      },
+      "merknad": "Flat liste (ikke paginert). 225 varer hos AH AS.",
+      "tilgang": "OK"
+    },
+    "POST /Goods": {
+      "metode": "POST",
+      "sti": "/Goods",
+      "parametere": {
+        "body": "Goods-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppretter ny vare.",
+      "tilgang": "OK"
+    },
+    "GET /Goods/{id}": {
+      "metode": "GET",
+      "sti": "/Goods/{id}",
+      "parametere": {
+        "id": "(paakreved) Vare-Id"
+      },
+      "respons_felter": {
+        "_same_as": "GET /Goods (enkelt objekt)"
+      },
+      "merknad": "Henter enkelt vare. 404 om Id ikke finnes.",
+      "tilgang": "OK"
+    },
+    "PUT /Goods/{id}": {
+      "metode": "PUT",
+      "sti": "/Goods/{id}",
+      "parametere": {
+        "id": "(paakreved) Vare-Id",
+        "body": "Oppdatert Goods-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppdaterer eksisterende vare.",
+      "tilgang": "OK"
+    },
+    "GET /Goods/Units": {
+      "metode": "GET",
+      "sti": "/Goods/Units",
+      "parametere": {},
+      "respons_felter": {
+        "UnitId": "integer",
+        "Name": "string (f.eks. 'tonn', 'm3', 'stk')"
+      },
+      "merknad": "Returnerer alle enhetstyper for varer.",
+      "tilgang": "OK"
+    },
+    "GET /GoodsCategories/{categoryId}/Goods": {
+      "metode": "GET",
+      "sti": "/GoodsCategories/{categoryId}/Goods",
+      "parametere": {
+        "categoryId": "(paakreved) Kategori-Id",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive"
+      },
+      "respons_felter": {
+        "_same_as": "GET /Goods (filtrert paa kategori)"
+      },
+      "merknad": "Henter varer for en bestemt kategori.",
+      "tilgang": "OK"
+    }
+  },
+
+  "GoodsCategories": {
+    "GET /GoodsCategories": {
+      "metode": "GET",
+      "sti": "/GoodsCategories",
+      "parametere": {
+        "goodsCategoryName": "(valgfri) Filtrer paa kategorinavn",
+        "production": "(valgfri) Kun produksjonskategorier",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive"
+      },
+      "respons_felter": {
+        "Id": "integer",
+        "Name": "string",
+        "IsProduction": "boolean",
+        "IsActive": "boolean"
+      },
+      "merknad": "Flat liste med varekategorier.",
+      "tilgang": "OK"
+    },
+    "POST /GoodsCategories": {
+      "metode": "POST",
+      "sti": "/GoodsCategories",
+      "parametere": {
+        "body": "GoodsCategory-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppretter ny varekategori.",
+      "tilgang": "OK"
+    },
+    "GET /GoodsCategories/{id}": {
+      "metode": "GET",
+      "sti": "/GoodsCategories/{id}",
+      "parametere": {
+        "id": "(paakreved) Kategori-Id"
+      },
+      "respons_felter": {
+        "_same_as": "GET /GoodsCategories (enkelt objekt)"
+      },
+      "merknad": "Henter enkelt varekategori. 404 om Id ikke finnes.",
+      "tilgang": "OK"
+    },
+    "PUT /GoodsCategories/{id}": {
+      "metode": "PUT",
+      "sti": "/GoodsCategories/{id}",
+      "parametere": {
+        "id": "(paakreved) Kategori-Id",
+        "body": "Oppdatert GoodsCategory-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppdaterer eksisterende varekategori.",
+      "tilgang": "OK"
+    }
+  },
+
+  "GoodsConsumption": {
+    "GET /GoodsConsumption": {
+      "metode": "GET",
+      "sti": "/GoodsConsumption",
+      "parametere": {
+        "fromDate": "(valgfri) ISO 8601 startdato",
+        "toDate": "(valgfri) ISO 8601 sluttdato",
+        "goodsCategoryId": "(valgfri) Filtrer paa varekategori",
+        "projectId": "(valgfri) Filtrer paa prosjekt",
+        "subProjectId": "(valgfri) Filtrer paa delprosjekt",
+        "Selection": "(valgfri) Seleksjonsfilter (integer)",
+        "markedToBeInvoiced": "(valgfri) Kun merket for fakturering",
+        "invoiced": "(valgfri) Kun fakturerte"
+      },
+      "respons_felter": {},
+      "merknad": "Paginert. 0 registreringer hos AH AS. Stoetter dato- og prosjektfiltrering.",
+      "tilgang": "OK"
+    },
+    "POST /GoodsConsumption": {
+      "metode": "POST",
+      "sti": "/GoodsConsumption",
+      "parametere": {
+        "body": "GoodsConsumption-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Registrerer nytt vareforbruk.",
+      "tilgang": "OK"
+    },
+    "GET /GoodsConsumption/{id}": {
+      "metode": "GET",
+      "sti": "/GoodsConsumption/{id}",
+      "parametere": {
+        "id": "(paakreved) Forbruk-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Henter enkelt vareforbruk. 404 om Id ikke finnes.",
+      "tilgang": "OK"
+    },
+    "PUT /GoodsConsumption/{id}": {
+      "metode": "PUT",
+      "sti": "/GoodsConsumption/{id}",
+      "parametere": {
+        "id": "(paakreved) Forbruk-Id",
+        "body": "Oppdatert GoodsConsumption-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppdaterer eksisterende vareforbruk.",
+      "tilgang": "OK"
+    },
+    "DELETE /GoodsConsumption/{goodsConsumptionId}": {
+      "metode": "DELETE",
+      "sti": "/GoodsConsumption/{goodsConsumptionId}",
+      "parametere": {
+        "goodsConsumptionId": "(paakreved) Forbruk-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Sletter et vareforbruk.",
+      "tilgang": "OK"
+    },
+    "POST /GoodsConsumption/{goodsConsumptionId}/MarkAsExported": {
+      "metode": "POST",
+      "sti": "/GoodsConsumption/{goodsConsumptionId}/MarkAsExported",
+      "parametere": {
+        "goodsConsumptionId": "(paakreved) Forbruk-Id",
+        "markAsInvoiced": "(valgfri) Marker ogsaa som fakturert"
+      },
+      "respons_felter": {},
+      "merknad": "Markerer vareforbruk som eksportert (og eventuelt fakturert).",
+      "tilgang": "OK"
+    }
+  },
+
+  "GoodsLocations": {
+    "GET /GoodsLocations": {
+      "metode": "GET",
+      "sti": "/GoodsLocations",
+      "parametere": {
+        "active": "(valgfri) Kun aktive lokasjoner"
+      },
+      "respons_felter": {},
+      "merknad": "Krever GoodsLocationsRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "POST /GoodsLocations": {
+      "metode": "POST",
+      "sti": "/GoodsLocations",
+      "parametere": {
+        "body": "GoodsLocation-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Krever GoodsLocationsRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "GET /GoodsLocations/{id}": {
+      "metode": "GET",
+      "sti": "/GoodsLocations/{id}",
+      "parametere": {
+        "id": "(paakreved) Lokasjon-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Krever GoodsLocationsRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "PUT /GoodsLocations/{id}": {
+      "metode": "PUT",
+      "sti": "/GoodsLocations/{id}",
+      "parametere": {
+        "id": "(paakreved) Lokasjon-Id",
+        "body": "Oppdatert GoodsLocation-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Krever GoodsLocationsRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "GET /GoodsLocations/Flows": {
+      "metode": "GET",
+      "sti": "/GoodsLocations/Flows",
+      "parametere": {},
+      "respons_felter": {},
+      "merknad": "Henter flytretninger for varelokasjoner. Krever GoodsLocationsRead-tilgang. 401.",
+      "tilgang": "401"
+    }
+  },
+
+  "GoodsProduction": {
+    "GET /GoodsProduction": {
+      "metode": "GET",
+      "sti": "/GoodsProduction",
+      "parametere": {
+        "fromDate": "(valgfri) ISO 8601 startdato",
+        "toDate": "(valgfri) ISO 8601 sluttdato",
+        "goodsCategoryId": "(valgfri) Filtrer paa varekategori",
+        "projectId": "(valgfri) Filtrer paa prosjekt",
+        "subProjectId": "(valgfri) Filtrer paa delprosjekt",
+        "Selection": "(valgfri) Seleksjonsfilter (integer)",
+        "markedToBeInvoiced": "(valgfri) Kun merket for fakturering",
+        "invoiced": "(valgfri) Kun fakturerte"
+      },
+      "respons_felter": {},
+      "merknad": "Flat liste (tom hos AH AS). Stoetter dato- og prosjektfiltrering.",
+      "tilgang": "OK"
+    },
+    "GET /GoodsProduction/{id}": {
+      "metode": "GET",
+      "sti": "/GoodsProduction/{id}",
+      "parametere": {
+        "id": "(paakreved) Produksjon-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Henter enkelt vareproduksjon. 404 om Id ikke finnes.",
+      "tilgang": "OK"
+    },
+    "POST /GoodsProduction/{goodsProductionId}/MarkAsExported": {
+      "metode": "POST",
+      "sti": "/GoodsProduction/{goodsProductionId}/MarkAsExported",
+      "parametere": {
+        "goodsProductionId": "(paakreved) Produksjon-Id",
+        "markAsInvoiced": "(valgfri) Marker ogsaa som fakturert"
+      },
+      "respons_felter": {},
+      "merknad": "Markerer vareproduksjon som eksportert.",
+      "tilgang": "OK"
+    }
+  },
+
+  "GoodsTransportation": {
+    "GET /GoodsTransportation": {
+      "metode": "GET",
+      "sti": "/GoodsTransportation",
+      "parametere": {
+        "fromDate": "(valgfri) ISO 8601 startdato",
+        "toDate": "(valgfri) ISO 8601 sluttdato",
+        "goodsCategoryId": "(valgfri) Filtrer paa varekategori",
+        "projectId": "(valgfri) Filtrer paa prosjekt",
+        "subProjectId": "(valgfri) Filtrer paa delprosjekt",
+        "Selection": "(valgfri) Seleksjonsfilter (integer)",
+        "markedToBeInvoiced": "(valgfri) Kun merket for fakturering",
+        "invoiced": "(valgfri) Kun fakturerte"
+      },
+      "respons_felter": {},
+      "merknad": "Paginert. 0 registreringer hos AH AS. Stoetter dato- og prosjektfiltrering.",
+      "tilgang": "OK"
+    },
+    "GET /GoodsTransportation/{id}": {
+      "metode": "GET",
+      "sti": "/GoodsTransportation/{id}",
+      "parametere": {
+        "id": "(paakreved) Transport-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Henter enkelt varetransport. 404 om Id ikke finnes.",
+      "tilgang": "OK"
+    },
+    "POST /GoodsTransportation/{goodsTransportationId}/MarkAsExported": {
+      "metode": "POST",
+      "sti": "/GoodsTransportation/{goodsTransportationId}/MarkAsExported",
+      "parametere": {
+        "goodsTransportationId": "(paakreved) Transport-Id",
+        "markAsInvoiced": "(valgfri) Marker ogsaa som fakturert"
+      },
+      "respons_felter": {},
+      "merknad": "Markerer varetransport som eksportert.",
+      "tilgang": "OK"
+    }
+  },
+
+  "Group": {
+    "GET /Group": {
+      "metode": "GET",
+      "sti": "/Group",
+      "parametere": {},
+      "respons_felter": {
+        "Id": "integer",
+        "Name": "string"
+      },
+      "merknad": "Flat liste (ikke paginert). 6 grupper hos AH AS.",
+      "tilgang": "OK"
+    },
+    "GET /Group/{id}": {
+      "metode": "GET",
+      "sti": "/Group/{id}",
+      "parametere": {
+        "id": "(paakreved) Gruppe-Id"
+      },
+      "respons_felter": {
+        "_same_as": "GET /Group (enkelt objekt, inkluderer brukerinfo)"
+      },
+      "merknad": "Henter enkelt gruppe med detaljer. 404 om Id ikke finnes.",
+      "tilgang": "OK"
+    },
+    "POST /Group/AddUser": {
+      "metode": "POST",
+      "sti": "/Group/AddUser",
+      "parametere": {
+        "body": "{groupId: integer, userId: string} (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Legger til en bruker i en gruppe.",
+      "tilgang": "OK"
+    },
+    "DELETE /Group/RemoveUser": {
+      "metode": "DELETE",
+      "sti": "/Group/RemoveUser",
+      "parametere": {
+        "userId": "(valgfri) Bruker-UUID"
+      },
+      "respons_felter": {},
+      "merknad": "Fjerner en bruker fra en gruppe.",
+      "tilgang": "OK"
+    }
+  },
+
+  "Invoices": {
+    "GET /Invoices": {
+      "metode": "GET",
+      "sti": "/Invoices",
+      "parametere": {
+        "fromDate": "(valgfri) ISO 8601 startdato",
+        "toDate": "(valgfri) ISO 8601 sluttdato"
+      },
+      "respons_felter": {},
+      "merknad": "Paginert. Stoetter datofiltrering. Ingen data hos AH AS.",
+      "tilgang": "OK"
+    },
+    "GET /Invoices/{id}": {
+      "metode": "GET",
+      "sti": "/Invoices/{id}",
+      "parametere": {
+        "id": "(paakreved) Faktura-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Henter enkelt faktura. 404 om Id ikke finnes.",
+      "tilgang": "OK"
+    }
+  },
+
+  "MachineCategories": {
+    "GET /MachineCategories": {
+      "metode": "GET",
+      "sti": "/MachineCategories",
+      "parametere": {
+        "machineCategoryName": "(valgfri) Filtrer paa kategorinavn",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive"
+      },
+      "respons_felter": {},
+      "merknad": "Krever MachineCategoriesRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "POST /MachineCategories": {
+      "metode": "POST",
+      "sti": "/MachineCategories",
+      "parametere": {
+        "body": "MachineCategory-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Krever MachineCategoriesRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "GET /MachineCategories/{id}": {
+      "metode": "GET",
+      "sti": "/MachineCategories/{id}",
+      "parametere": {
+        "id": "(paakreved) Kategori-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Krever MachineCategoriesRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "PUT /MachineCategories/{id}": {
+      "metode": "PUT",
+      "sti": "/MachineCategories/{id}",
+      "parametere": {
+        "id": "(paakreved) Kategori-Id",
+        "body": "Oppdatert MachineCategory-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Krever MachineCategoriesRead-tilgang. 401.",
+      "tilgang": "401"
+    }
+  },
+
+  "Machines": {
+    "GET /Machines": {
+      "metode": "GET",
+      "sti": "/Machines",
+      "parametere": {
+        "internalNumber": "(valgfri) Filtrer paa internnummer",
+        "machineName": "(valgfri) Filtrer paa maskinnavn",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive"
+      },
+      "respons_felter": {
+        "Id": "integer",
+        "Name": "string",
+        "InternalNumber": "string",
+        "CategoryId": "integer",
+        "RegistrationNumber": "string",
+        "Description": "string",
+        "HoursUsed": "integer",
+        "MilageKm": "integer",
+        "ModelYear": "integer",
+        "Location": "string (siste registrerte lokasjon)",
+        "LocationDateTime": "string (ISO 8601)",
+        "DateAcquired": "string|null",
+        "IsActive": "boolean",
+        "Comment": "string",
+        "PricePerHour": "number|null",
+        "SerialNumber": "string",
+        "CategoryName": "string",
+        "InternalCost": "number|null",
+        "Code": "string",
+        "HideInTransportation": "boolean",
+        "MaxTons": "number",
+        "MaxM3": "number",
+        "ImageUrl": "string",
+        "ResponsibleUsers": "array (UUID-er)",
+        "Trailer": "boolean",
+        "ShowInRegistrations": "boolean",
+        "DepartmentIds": "array (integer)"
+      },
+      "merknad": "Paginert. 185 maskiner hos AH AS. Ingen serversidefiltrering paa kategori.",
+      "tilgang": "OK"
+    },
+    "POST /Machines": {
+      "metode": "POST",
+      "sti": "/Machines",
+      "parametere": {
+        "body": "Machine-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppretter ny maskin.",
+      "tilgang": "OK"
+    },
+    "GET /Machines/{id}": {
+      "metode": "GET",
+      "sti": "/Machines/{id}",
+      "parametere": {
+        "id": "(paakreved) Maskin-Id"
+      },
+      "respons_felter": {
+        "_same_as": "GET /Machines (enkelt objekt)"
+      },
+      "merknad": "Henter enkelt maskin. 404 om Id ikke finnes.",
+      "tilgang": "OK"
+    },
+    "PUT /Machines/{id}": {
+      "metode": "PUT",
+      "sti": "/Machines/{id}",
+      "parametere": {
+        "id": "(paakreved) Maskin-Id",
+        "body": "Oppdatert Machine-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppdaterer eksisterende maskin.",
+      "tilgang": "OK"
+    }
+  },
+
+  "News": {
+    "POST /News": {
+      "metode": "POST",
+      "sti": "/News",
+      "parametere": {
+        "body": "News-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Krever NewsPostRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "GET /News/{id}": {
+      "metode": "GET",
+      "sti": "/News/{id}",
+      "parametere": {
+        "id": "(paakreved) Nyhet-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Krever NewsPostRead-tilgang. 401.",
+      "tilgang": "401"
+    }
+  },
+
+  "OrderTypes": {
+    "GET /OrderTypes": {
+      "metode": "GET",
+      "sti": "/OrderTypes",
+      "parametere": {},
+      "respons_felter": {},
+      "merknad": "Krever OrderTypeRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "POST /OrderTypes": {
+      "metode": "POST",
+      "sti": "/OrderTypes",
+      "parametere": {
+        "body": "OrderType-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Krever OrderTypeRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "GET /OrderTypes/{id}": {
+      "metode": "GET",
+      "sti": "/OrderTypes/{id}",
+      "parametere": {
+        "id": "(paakreved) Ordretype-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Krever OrderTypeRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "PUT /OrderTypes/{id}": {
+      "metode": "PUT",
+      "sti": "/OrderTypes/{id}",
+      "parametere": {
+        "id": "(paakreved) Ordretype-Id",
+        "body": "Oppdatert OrderType-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Krever OrderTypeRead-tilgang. 401.",
+      "tilgang": "401"
+    }
+  },
+
+  "Orders": {
+    "GET /Orders": {
+      "metode": "GET",
+      "sti": "/Orders",
+      "deprecated": true,
+      "parametere": {
+        "orderNumber": "(valgfri) Filtrer paa ordrenummer",
+        "orderName": "(valgfri) Filtrer paa ordrenavn",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive",
+        "modifiedSince": "(valgfri) ISO 8601 dato",
+        "createdSince": "(valgfri) ISO 8601 dato"
+      },
+      "respons_felter": {},
+      "merknad": "DEPRECATED. Krever OrdersRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "POST /Orders": {
+      "metode": "POST",
+      "sti": "/Orders",
+      "deprecated": true,
+      "parametere": {
+        "body": "Order-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "DEPRECATED. Krever OrdersRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "GET /Orders/{id}": {
+      "metode": "GET",
+      "sti": "/Orders/{id}",
+      "deprecated": true,
+      "parametere": {
+        "id": "(paakreved) Ordre-Id"
+      },
+      "respons_felter": {},
+      "merknad": "DEPRECATED. Krever OrdersRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "PUT /Orders/{id}": {
+      "metode": "PUT",
+      "sti": "/Orders/{id}",
+      "deprecated": true,
+      "parametere": {
+        "id": "(paakreved) Ordre-Id",
+        "removeOtherUserIdsWithAccess": "(valgfri) Fjern andre brukeres tilgang"
+      },
+      "respons_felter": {},
+      "merknad": "DEPRECATED. Krever OrdersRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "GET /Orders/GetAvailableByUser": {
+      "metode": "GET",
+      "sti": "/Orders/GetAvailableByUser",
+      "deprecated": true,
+      "parametere": {
+        "userId": "(valgfri) Bruker-UUID",
+        "onlyActive": "(valgfri) Kun aktive"
+      },
+      "respons_felter": {},
+      "merknad": "DEPRECATED. Tilgjengelige ordrer for en bruker. 401.",
+      "tilgang": "401"
+    },
+    "GET /Orders/GetByUser": {
+      "metode": "GET",
+      "sti": "/Orders/GetByUser",
+      "deprecated": true,
+      "parametere": {
+        "userId": "(valgfri) Bruker-UUID",
+        "onlyActive": "(valgfri) Kun aktive"
+      },
+      "respons_felter": {},
+      "merknad": "DEPRECATED. Ordrer for en bruker. 401.",
+      "tilgang": "401"
+    },
+    "GET /Orders/NextNumber": {
+      "metode": "GET",
+      "sti": "/Orders/NextNumber",
+      "deprecated": true,
+      "parametere": {},
+      "respons_felter": {},
+      "merknad": "DEPRECATED. Neste ledige ordrenummer. 401.",
+      "tilgang": "401"
+    },
+    "GET /Orders/types": {
+      "metode": "GET",
+      "sti": "/Orders/types",
+      "deprecated": true,
+      "parametere": {
+        "onlyActive": "(valgfri) Kun aktive"
+      },
+      "respons_felter": {},
+      "merknad": "DEPRECATED. Ordretyper. 401.",
+      "tilgang": "401"
+    }
+  },
+
+  "OrderWorkers": {
+    "GET /v2/orders/{projectId}/workers": {
+      "metode": "GET",
+      "sti": "/v2/orders/{projectId}/workers",
+      "parametere": {
+        "projectId": "(paakreved) Prosjekt-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Krever OrderWorkersRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "PUT /v2/orders/{projectId}/workers": {
+      "metode": "PUT",
+      "sti": "/v2/orders/{projectId}/workers",
+      "parametere": {
+        "projectId": "(paakreved) Prosjekt-Id",
+        "body": "Workers-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Krever OrderWorkersRead-tilgang. 401.",
+      "tilgang": "401"
+    }
+  },
+
+  "Pictures": {
+    "GET /Pictures/project/{projectId}": {
+      "metode": "GET",
+      "sti": "/Pictures/project/{projectId}",
+      "parametere": {
+        "projectId": "(paakreved) Prosjekt-Id",
+        "subProjectId": "(valgfri) Delprosjekt-Id",
+        "fromDate": "(valgfri) ISO 8601 startdato",
+        "toDate": "(valgfri) ISO 8601 sluttdato"
+      },
+      "respons_felter": {},
+      "merknad": "Paginert. Henter bilder knyttet til et prosjekt. Stoetter dato- og delprosjektfiltrering.",
+      "tilgang": "OK"
+    }
+  },
+
+  "Projects": {
+    "GET /Projects": {
+      "metode": "GET",
+      "sti": "/Projects",
+      "parametere": {
+        "projectNumber": "(valgfri) Filtrer paa prosjektnummer",
+        "projectName": "(valgfri) Filtrer paa prosjektnavn",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive",
+        "includeOrders": "(valgfri) Inkluder ordreinfo",
+        "updatedSince": "(valgfri) ISO 8601 dato",
+        "createdSince": "(valgfri) ISO 8601 dato"
+      },
+      "respons_felter": {
+        "Id": "integer",
+        "ProjectName": "string",
+        "ProjectNumber": "string (OBS: kan ha trailing spaces — bruk .trim())",
+        "Departments": "array (integer, avdeling-Id-er)",
+        "IsAbsenceProject": "boolean",
+        "IsActive": "boolean",
+        "IsOrder": "boolean",
+        "OrderTypeId": "integer|null",
+        "ExternalReference": "string|null",
+        "CustomerId": "integer|null",
+        "StartDate": "string (ISO 8601)",
+        "EndDate": "string|null",
+        "Location": "string",
+        "ProjectOwnerName": "string",
+        "ProjectOwnerEmail": "string",
+        "ProjectOwnerMobile": "string",
+        "ClientCompanyName": "string",
+        "ClientCompanyContact": "string",
+        "ClientCompanyEmail": "string",
+        "ClientCompanyMobile": "string",
+        "DescriptionText": "string",
+        "DocumentUrl": "string",
+        "CalcuatedTimeConsumption": "integer (OBS: skrivefeil i API, mangler 'l')",
+        "CalculatedTimeConsumption": "integer (korrekt stavemaate, begge returnerer 0)",
+        "InternalCostPerHour": "number",
+        "HourlyRate": "number",
+        "Finished": "boolean",
+        "ToBeInvoiced": "boolean",
+        "GeoLocation": "object|null",
+        "UserIds": "array (UUID-strenger)",
+        "Updated": "string (ISO 8601)",
+        "Created": "string (ISO 8601)",
+        "InvoiceCalculationNote": "string",
+        "HSEResponsibleId": "string (UUID)",
+        "QAResponsibleId": "string (UUID)",
+        "TimeConsumption": "number"
+      },
+      "merknad": "Paginert. 43 prosjekter hos AH AS. Returnerer kun NAAVARENDE prosjekter — gamle/avsluttede kan mangle. ProjectNumber kan ha trailing spaces.",
+      "tilgang": "OK"
+    },
+    "POST /Projects": {
+      "metode": "POST",
+      "sti": "/Projects",
+      "parametere": {
+        "body": "Project-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppretter nytt prosjekt.",
+      "tilgang": "OK"
+    },
+    "GET /Projects/{id}": {
+      "metode": "GET",
+      "sti": "/Projects/{id}",
+      "parametere": {
+        "id": "(paakreved) Prosjekt-Id"
+      },
+      "respons_felter": {
+        "_same_as": "GET /Projects (enkelt objekt)"
+      },
+      "merknad": "Henter enkelt prosjekt. 404 om Id ikke finnes.",
+      "tilgang": "OK"
+    },
+    "PUT /Projects/{id}": {
+      "metode": "PUT",
+      "sti": "/Projects/{id}",
+      "deprecated": true,
+      "parametere": {
+        "id": "(paakreved) Prosjekt-Id",
+        "body": "Oppdatert Project-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "DEPRECATED. Bruk PUT /v3/Projects/{id}.",
+      "tilgang": "OK"
+    },
+    "PUT /v2/Projects/{id}": {
+      "metode": "PUT",
+      "sti": "/v2/Projects/{id}",
+      "deprecated": true,
+      "parametere": {
+        "id": "(paakreved) Prosjekt-Id",
+        "body": "Oppdatert Project-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "DEPRECATED. Bruk PUT /v3/Projects/{id}.",
+      "tilgang": "OK"
+    },
+    "PUT /v3/Projects/{id}": {
+      "metode": "PUT",
+      "sti": "/v3/Projects/{id}",
+      "parametere": {
+        "id": "(paakreved) Prosjekt-Id",
+        "body": "Oppdatert Project-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Nyeste versjon av prosjektoppdatering. Bruk denne.",
+      "tilgang": "OK"
+    },
+    "GET /Projects/NextProjectNumber": {
+      "metode": "GET",
+      "sti": "/Projects/NextProjectNumber",
+      "parametere": {},
+      "respons_felter": {
+        "_type": "string (neste ledige prosjektnummer, f.eks. '260009')"
+      },
+      "merknad": "Returnerer neste ledige prosjektnummer som streng.",
+      "tilgang": "OK"
+    },
+    "GET /Projects/NextNumber": {
+      "metode": "GET",
+      "sti": "/Projects/NextNumber",
+      "deprecated": true,
+      "parametere": {},
+      "respons_felter": {
+        "_type": "integer (neste ledige prosjektnummer)"
+      },
+      "merknad": "DEPRECATED. Returnerer neste ledige prosjektnummer som integer. Bruk /Projects/NextProjectNumber.",
+      "tilgang": "OK"
+    },
+    "GET /Projects/{id}/Prices": {
+      "metode": "GET",
+      "sti": "/Projects/{id}/Prices",
+      "parametere": {
+        "id": "(paakreved) Prosjekt-Id",
+        "type": "(valgfri) Pristype-filter"
+      },
+      "respons_felter": {},
+      "merknad": "Paginert. Henter priser for et prosjekt.",
+      "tilgang": "OK"
+    }
+  },
+
+  "ProjectLocation": {
+    "GET /Projects/{id}/Location": {
+      "metode": "GET",
+      "sti": "/Projects/{id}/Location",
+      "parametere": {
+        "id": "(paakreved) Prosjekt-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Henter GPS-lokasjon for et prosjekt. 404 om prosjekt eller lokasjon ikke finnes.",
+      "tilgang": "OK"
+    },
+    "PUT /Projects/{id}/Location": {
+      "metode": "PUT",
+      "sti": "/Projects/{id}/Location",
+      "parametere": {
+        "id": "(paakreved) Prosjekt-Id",
+        "body": "Location-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppdaterer GPS-lokasjon for et prosjekt.",
+      "tilgang": "OK"
+    },
+    "DELETE /Projects/{id}/Location": {
+      "metode": "DELETE",
+      "sti": "/Projects/{id}/Location",
+      "parametere": {
+        "id": "(paakreved) Prosjekt-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Sletter GPS-lokasjon for et prosjekt.",
+      "tilgang": "OK"
+    }
+  },
+
+  "SubProjects": {
+    "GET /SubProjects": {
+      "metode": "GET",
+      "sti": "/SubProjects",
+      "parametere": {
+        "subProjectNumber": "(valgfri) Filtrer paa delprosjektnummer",
+        "subProjectName": "(valgfri) Filtrer paa delprosjektnavn",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive",
+        "updatedSince": "(valgfri) ISO 8601 dato"
+      },
+      "respons_felter": {
+        "Id": "integer",
+        "ProjectId": "integer",
+        "SubProjectName": "string",
+        "SubProjectNumber": "string",
+        "IsActive": "boolean",
+        "StartDate": "string|null",
+        "EndDate": "string|null",
+        "DescriptionText": "string",
+        "ClientCompanyName": "string",
+        "DocumentUrl": "string",
+        "CalculatedHourUse": "number",
+        "Location": "string",
+        "GeoLocation": "object|null",
+        "Project": "{ProjectId: integer, ProjectName: string, ProjectNumber: string}",
+        "Updated": "string (ISO 8601)",
+        "InvoiceCalculationNote": "string",
+        "HSEResponsibleId": "string|null (UUID)",
+        "QAResponsibleId": "string|null (UUID)",
+        "TimeConsumption": "number"
+      },
+      "merknad": "Paginert. 84 delprosjekter hos AH AS. Henter ALLE delprosjekter paa tvers av prosjekter.",
+      "tilgang": "OK"
+    },
+    "GET /SubProjects/{id}": {
+      "metode": "GET",
+      "sti": "/SubProjects/{id}",
+      "parametere": {
+        "id": "(paakreved) Delprosjekt-Id"
+      },
+      "respons_felter": {
+        "_same_as": "GET /SubProjects (enkelt objekt)"
+      },
+      "merknad": "Henter enkelt delprosjekt. 404 om Id ikke finnes.",
+      "tilgang": "OK"
+    },
+    "PUT /SubProjects/{id}": {
+      "metode": "PUT",
+      "sti": "/SubProjects/{id}",
+      "parametere": {
+        "id": "(paakreved) Delprosjekt-Id",
+        "body": "Oppdatert SubProject-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppdaterer eksisterende delprosjekt.",
+      "tilgang": "OK"
+    },
+    "GET /Projects/{projectId}/SubProjects": {
+      "metode": "GET",
+      "sti": "/Projects/{projectId}/SubProjects",
+      "parametere": {
+        "projectId": "(paakreved) Prosjekt-Id",
+        "subProjectNumber": "(valgfri) Filtrer paa delprosjektnummer",
+        "subProjectName": "(valgfri) Filtrer paa delprosjektnavn",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive",
+        "updatedSince": "(valgfri) ISO 8601 dato"
+      },
+      "respons_felter": {
+        "_same_as": "GET /SubProjects (filtrert paa prosjekt)"
+      },
+      "merknad": "Henter delprosjekter for et bestemt prosjekt. 404 om prosjekt ikke finnes.",
+      "tilgang": "OK"
+    },
+    "POST /Projects/{projectId}/SubProjects": {
+      "metode": "POST",
+      "sti": "/Projects/{projectId}/SubProjects",
+      "parametere": {
+        "projectId": "(paakreved) Prosjekt-Id",
+        "body": "SubProject-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppretter nytt delprosjekt under et prosjekt.",
+      "tilgang": "OK"
+    },
+    "GET /Projects/{projectId}/SubProjects/NextNumber": {
+      "metode": "GET",
+      "sti": "/Projects/{projectId}/SubProjects/NextNumber",
+      "parametere": {
+        "projectId": "(paakreved) Prosjekt-Id"
+      },
+      "respons_felter": {
+        "_type": "string (neste ledige delprosjektnummer)"
+      },
+      "merknad": "Returnerer neste ledige delprosjektnummer for et prosjekt.",
+      "tilgang": "OK"
+    }
+  },
+
+  "SubProjectLocation": {
+    "GET /SubProjects/{id}/Location": {
+      "metode": "GET",
+      "sti": "/SubProjects/{id}/Location",
+      "parametere": {
+        "id": "(paakreved) Delprosjekt-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Henter GPS-lokasjon for et delprosjekt. 404 om delprosjekt eller lokasjon ikke finnes.",
+      "tilgang": "OK"
+    },
+    "PUT /SubProjects/{id}/Location": {
+      "metode": "PUT",
+      "sti": "/SubProjects/{id}/Location",
+      "parametere": {
+        "id": "(paakreved) Delprosjekt-Id",
+        "body": "Location-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppdaterer GPS-lokasjon for et delprosjekt.",
+      "tilgang": "OK"
+    },
+    "DELETE /SubProjects/{id}/Location": {
+      "metode": "DELETE",
+      "sti": "/SubProjects/{id}/Location",
+      "parametere": {
+        "id": "(paakreved) Delprosjekt-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Sletter GPS-lokasjon for et delprosjekt.",
+      "tilgang": "OK"
+    }
+  },
+
+  "SupplierInvoices": {
+    "POST /SupplierInvoices": {
+      "metode": "POST",
+      "sti": "/SupplierInvoices",
+      "parametere": {
+        "body": "SupplierInvoice-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppretter ny leverandoerfaktura.",
+      "tilgang": "OK"
+    },
+    "PUT /SupplierInvoices": {
+      "metode": "PUT",
+      "sti": "/SupplierInvoices",
+      "parametere": {
+        "body": "Oppdatert SupplierInvoice-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppdaterer leverandoerfaktura.",
+      "tilgang": "OK"
+    },
+    "GET /SupplierInvoices/{id}": {
+      "metode": "GET",
+      "sti": "/SupplierInvoices/{id}",
+      "parametere": {
+        "id": "(paakreved) Ekstern fakturanummer (string, IKKE integer)"
+      },
+      "respons_felter": {},
+      "merknad": "Henter leverandoerfaktura. Id er string (ekstern fakturanummer). 400 om ugyldig format.",
+      "tilgang": "OK"
+    },
+    "POST /SupplierInvoices/document/upload": {
+      "metode": "POST",
+      "sti": "/SupplierInvoices/document/upload",
+      "parametere": {
+        "externalInvoiceNumber": "(valgfri) Ekstern fakturanummer",
+        "body": "Filopplasting (multipart)"
+      },
+      "respons_felter": {},
+      "merknad": "Laster opp fakturadokument. Nyere versjon (bruker query parameter).",
+      "tilgang": "OK"
+    },
+    "POST /SupplierInvoices/{externalInvoiceNumber}/document/upload": {
+      "metode": "POST",
+      "sti": "/SupplierInvoices/{externalInvoiceNumber}/document/upload",
+      "deprecated": true,
+      "parametere": {
+        "externalInvoiceNumber": "(paakreved) Ekstern fakturanummer (i sti)",
+        "body": "Filopplasting (multipart)"
+      },
+      "respons_felter": {},
+      "merknad": "DEPRECATED. Bruk POST /SupplierInvoices/document/upload med query parameter i stedet.",
+      "tilgang": "OK"
+    }
+  },
+
+  "ResourcePlanning": {
+    "GET /ResourcePlanning/Plans": {
+      "metode": "GET",
+      "sti": "/ResourcePlanning/Plans",
+      "parametere": {
+        "offset": "(valgfri) Startposisjon",
+        "count": "(valgfri) Antall per kall",
+        "from": "(valgfri) ISO 8601 startdato",
+        "to": "(valgfri) ISO 8601 sluttdato",
+        "resourceType": "(valgfri) Ressurstype",
+        "resourceGroupId": "(valgfri) Ressursgruppe-UUID",
+        "resourceId": "(valgfri) Ressurs-Id",
+        "projectId": "(valgfri) Prosjekt-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Krever ResourcePlanningRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "GET /ResourcePlanning/Resources": {
+      "metode": "GET",
+      "sti": "/ResourcePlanning/Resources",
+      "parametere": {
+        "offset": "(valgfri) Startposisjon",
+        "count": "(valgfri) Antall per kall",
+        "resourceType": "(valgfri) Ressurstype",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive"
+      },
+      "respons_felter": {},
+      "merknad": "Krever ResourcePlanningRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "GET /ResourcePlanning/Resources/{resourceId}": {
+      "metode": "GET",
+      "sti": "/ResourcePlanning/Resources/{resourceId}",
+      "parametere": {
+        "resourceId": "(paakreved) Ressurs-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Krever ResourcePlanningRead-tilgang. 401.",
+      "tilgang": "401"
+    }
+  },
+
+  "Tools": {
+    "GET /Tools": {
+      "metode": "GET",
+      "sti": "/Tools",
+      "parametere": {
+        "activeOnly": "(valgfri) Kun aktive verktoey"
+      },
+      "respons_felter": {},
+      "merknad": "Krever ToolsRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "POST /Tools": {
+      "metode": "POST",
+      "sti": "/Tools",
+      "parametere": {
+        "body": "Tool-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Krever ToolsRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "GET /Tools/{id}": {
+      "metode": "GET",
+      "sti": "/Tools/{id}",
+      "parametere": {
+        "id": "(paakreved) Verktoey-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Krever ToolsRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "PUT /Tools/{id}": {
+      "metode": "PUT",
+      "sti": "/Tools/{id}",
+      "parametere": {
+        "id": "(paakreved) Verktoey-Id",
+        "body": "Oppdatert Tool-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Krever ToolsRead-tilgang. 401.",
+      "tilgang": "401"
+    }
+  },
+
+  "ToolCategories": {
+    "GET /Tools/Categories": {
+      "metode": "GET",
+      "sti": "/Tools/Categories",
+      "parametere": {},
+      "respons_felter": {},
+      "merknad": "Krever ToolCategoriesRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "POST /Tools/Categories": {
+      "metode": "POST",
+      "sti": "/Tools/Categories",
+      "parametere": {
+        "body": "ToolCategory-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Krever ToolCategoriesRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "GET /Tools/Categories/{id}": {
+      "metode": "GET",
+      "sti": "/Tools/Categories/{id}",
+      "parametere": {
+        "id": "(paakreved) Kategori-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Krever ToolCategoriesRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "PUT /Tools/Categories/{id}": {
+      "metode": "PUT",
+      "sti": "/Tools/Categories/{id}",
+      "parametere": {
+        "id": "(paakreved) Kategori-Id",
+        "body": "Oppdatert ToolCategory-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Krever ToolCategoriesRead-tilgang. 401.",
+      "tilgang": "401"
+    }
+  },
+
+  "ToolLocations": {
+    "GET /Tools/Locations": {
+      "metode": "GET",
+      "sti": "/Tools/Locations",
+      "parametere": {
+        "activeOnly": "(valgfri) Kun aktive lokasjoner"
+      },
+      "respons_felter": {},
+      "merknad": "Krever ToolLocationsRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "POST /Tools/Locations": {
+      "metode": "POST",
+      "sti": "/Tools/Locations",
+      "parametere": {
+        "body": "ToolLocation-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Krever ToolLocationsRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "GET /Tools/Locations/{id}": {
+      "metode": "GET",
+      "sti": "/Tools/Locations/{id}",
+      "parametere": {
+        "id": "(paakreved) Lokasjon-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Krever ToolLocationsRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "PUT /Tools/Locations/{id}": {
+      "metode": "PUT",
+      "sti": "/Tools/Locations/{id}",
+      "parametere": {
+        "id": "(paakreved) Lokasjon-Id",
+        "body": "Oppdatert ToolLocation-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Krever ToolLocationsRead-tilgang. 401.",
+      "tilgang": "401"
+    }
+  },
+
+  "TripToFromWorkAddition": {
+    "GET /TripToFromWorkAddition": {
+      "metode": "GET",
+      "sti": "/TripToFromWorkAddition",
+      "parametere": {
+        "additionNumber": "(valgfri) Filtrer paa tilleggsnummer",
+        "additionName": "(valgfri) Filtrer paa tilleggsnavn",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive"
+      },
+      "respons_felter": {},
+      "merknad": "Reise til/fra arbeid-tillegg. Krever TripToFromWorkAdditionRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "POST /TripToFromWorkAddition": {
+      "metode": "POST",
+      "sti": "/TripToFromWorkAddition",
+      "parametere": {
+        "body": "TripToFromWorkAddition-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Krever TripToFromWorkAdditionRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "GET /TripToFromWorkAddition/{id}": {
+      "metode": "GET",
+      "sti": "/TripToFromWorkAddition/{id}",
+      "parametere": {
+        "id": "(paakreved) Tillegg-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Krever TripToFromWorkAdditionRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "PUT /TripToFromWorkAddition/{id}": {
+      "metode": "PUT",
+      "sti": "/TripToFromWorkAddition/{id}",
+      "parametere": {
+        "id": "(paakreved) Tillegg-Id",
+        "body": "Oppdatert TripToFromWorkAddition-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Krever TripToFromWorkAdditionRead-tilgang. 401.",
+      "tilgang": "401"
+    }
+  },
+
+  "Users": {
+    "GET /Users": {
+      "metode": "GET",
+      "sti": "/Users",
+      "parametere": {
+        "all": "(valgfri) Inkluder inaktive/slettede",
+        "active": "(valgfri) Kun aktive"
+      },
+      "respons_felter": {
+        "Id": "string (UUID)",
+        "UserName": "string (telefonnummer)",
+        "Name": "string",
+        "Email": "string",
+        "PhonePrefix": "string (f.eks. '47')",
+        "PhoneNumber": "string",
+        "BirthDate": "string (f.eks. '01.08.1991')",
+        "Role": "string (User, Foreman, ProjectAdministrator, Administrator, Guest, EmployeeWithoutAccess, SubContractor)",
+        "AccessLevelId": "string (UUID)",
+        "IsEnded": "boolean",
+        "CompanyId": "integer",
+        "DepartmentId": "integer",
+        "EmployeeNo": "string",
+        "ExternalEmployeeNo": "string",
+        "GroupId": "integer",
+        "GroupName": "string",
+        "LanguageCode": "string (f.eks. 'nb-no')",
+        "NextOfKinName": "string",
+        "NextOfKinPhonePrivate": "string",
+        "NextOfKinPhoneWork": "string",
+        "NextOfKinRelation": "string",
+        "NextOfKin2Name": "string",
+        "NextOfKin2PhonePrivate": "string",
+        "NextOfKin2PhoneWork": "string",
+        "NextOfKin2Relation": "string",
+        "ResourceType": "string|null",
+        "DepartmentName": "string",
+        "Expertise": "string|null",
+        "IsLockedOut": "boolean",
+        "IsDeleted": "boolean",
+        "IsContactPerson": "boolean",
+        "EmployeeCost": "number|null",
+        "LastActivityTime": "string (ISO 8601)",
+        "CreatedDate": "string (ISO 8601)"
+      },
+      "merknad": "Paginert. 64 brukere hos AH AS. Id er UUID som brukes som SubmitterId, OwnerId, HSEResponsibleId i andre endepunkter.",
+      "tilgang": "OK"
+    },
+    "POST /Users": {
+      "metode": "POST",
+      "sti": "/Users",
+      "parametere": {
+        "body": "User-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppretter ny bruker.",
+      "tilgang": "OK"
+    },
+    "GET /Users/current": {
+      "metode": "GET",
+      "sti": "/Users/current",
+      "parametere": {},
+      "respons_felter": {
+        "_same_as": "GET /Users (enkelt objekt for innlogget bruker)"
+      },
+      "merknad": "Returnerer den innloggede brukeren (API-bruker). Samme felter som /Users.",
+      "tilgang": "OK"
+    },
+    "GET /Users/{id}": {
+      "metode": "GET",
+      "sti": "/Users/{id}",
+      "parametere": {
+        "id": "(paakreved) Bruker-UUID"
+      },
+      "respons_felter": {
+        "_same_as": "GET /Users (enkelt objekt)"
+      },
+      "merknad": "Henter enkelt bruker.",
+      "tilgang": "OK"
+    },
+    "PUT /Users/{id}": {
+      "metode": "PUT",
+      "sti": "/Users/{id}",
+      "parametere": {
+        "id": "(paakreved) Bruker-UUID",
+        "body": "Oppdatert User-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppdaterer brukerinfo.",
+      "tilgang": "OK"
+    },
+    "DELETE /Users/{id}": {
+      "metode": "DELETE",
+      "sti": "/Users/{id}",
+      "parametere": {
+        "id": "(paakreved) Bruker-UUID"
+      },
+      "respons_felter": {},
+      "merknad": "Sletter en bruker.",
+      "tilgang": "OK"
+    },
+    "GET /LicenseInfo": {
+      "metode": "GET",
+      "sti": "/LicenseInfo",
+      "parametere": {},
+      "respons_felter": {
+        "AvailableLicenses": "integer",
+        "TotalLicenses": "integer"
+      },
+      "merknad": "Returnerer lisensinfo for selskapet.",
+      "tilgang": "OK"
+    },
+    "GET /Roles": {
+      "metode": "GET",
+      "sti": "/Roles",
+      "deprecated": true,
+      "parametere": {},
+      "respons_felter": {
+        "_type": "array av strenger: User, Foreman, ProjectAdministrator, Administrator, Guest, EmployeeWithoutAccess, SubContractor"
+      },
+      "merknad": "DEPRECATED. Returnerer liste over tilgjengelige roller som strenger.",
+      "tilgang": "OK"
+    }
+  },
+
+  "Wages": {
+    "GET /Wages": {
+      "metode": "GET",
+      "sti": "/Wages",
+      "parametere": {
+        "wageNumber": "(valgfri) Filtrer paa loennsnummer",
+        "wageName": "(valgfri) Filtrer paa loennsnavn",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive"
+      },
+      "respons_felter": {
+        "Id": "integer",
+        "Name": "string",
+        "IsAbsence": "boolean (er dette en fravaerstype)",
+        "IsDaytime": "boolean",
+        "Number": "string",
+        "IsActive": "boolean",
+        "Export": "boolean",
+        "Rate": "number",
+        "HourlyCost": "number",
+        "InternalPrice": "number",
+        "Order": "integer (sorteringsrekkefoelje)",
+        "IsCommentRequired": "boolean"
+      },
+      "merknad": "Flat liste med loennsarter/typer.",
+      "tilgang": "OK"
+    },
+    "POST /Wages": {
+      "metode": "POST",
+      "sti": "/Wages",
+      "parametere": {
+        "body": "Wage-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppretter ny loennsart.",
+      "tilgang": "OK"
+    },
+    "GET /Wages/{id}": {
+      "metode": "GET",
+      "sti": "/Wages/{id}",
+      "parametere": {
+        "id": "(paakreved) Loennsart-Id"
+      },
+      "respons_felter": {
+        "_same_as": "GET /Wages (enkelt objekt)"
+      },
+      "merknad": "Henter enkelt loennsart. 404 om Id ikke finnes.",
+      "tilgang": "OK"
+    },
+    "PUT /Wages/{id}": {
+      "metode": "PUT",
+      "sti": "/Wages/{id}",
+      "parametere": {
+        "id": "(paakreved) Loennsart-Id",
+        "body": "Oppdatert Wage-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppdaterer eksisterende loennsart.",
+      "tilgang": "OK"
+    }
+  },
+
+  "Webhooks": {
+    "GET /Webhooks": {
+      "metode": "GET",
+      "sti": "/Webhooks",
+      "parametere": {},
+      "respons_felter": {},
+      "merknad": "Paginert. 0 webhook-abonnementer hos AH AS.",
+      "tilgang": "OK"
+    },
+    "POST /Webhooks": {
+      "metode": "POST",
+      "sti": "/Webhooks",
+      "parametere": {
+        "body": "Webhook-objekt (JSON, med URL og hendelsestype)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppretter nytt webhook-abonnement.",
+      "tilgang": "OK"
+    },
+    "PUT /Webhooks/{id}": {
+      "metode": "PUT",
+      "sti": "/Webhooks/{id}",
+      "parametere": {
+        "id": "(paakreved) Webhook-Id",
+        "body": "Oppdatert Webhook-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppdaterer eksisterende webhook-abonnement.",
+      "tilgang": "OK"
+    },
+    "DELETE /Webhooks/{id}": {
+      "metode": "DELETE",
+      "sti": "/Webhooks/{id}",
+      "parametere": {
+        "id": "(paakreved) Webhook-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Sletter et webhook-abonnement.",
+      "tilgang": "OK"
+    }
+  },
+
+  "WorkDescriptionCategory": {
+    "GET /WorkDescriptionCategory": {
+      "metode": "GET",
+      "sti": "/WorkDescriptionCategory",
+      "parametere": {
+        "workDescriptionCategoryName": "(valgfri) Filtrer paa kategorinavn",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive",
+        "updatedSince": "(valgfri) ISO 8601 dato"
+      },
+      "respons_felter": {},
+      "merknad": "Aktivitetskategorier. Krever ActivityCategoriesRead-tilgang. 401.",
+      "tilgang": "401"
+    },
+    "GET /WorkDescriptionCategory/{id}": {
+      "metode": "GET",
+      "sti": "/WorkDescriptionCategory/{id}",
+      "parametere": {
+        "id": "(paakreved) Kategori-Id"
+      },
+      "respons_felter": {},
+      "merknad": "Krever ActivityCategoriesRead-tilgang. 401.",
+      "tilgang": "401"
+    }
+  },
+
+  "Activity": {
+    "GET /WorkDescriptions": {
+      "metode": "GET",
+      "sti": "/WorkDescriptions",
+      "parametere": {
+        "workDescriptionNumber": "(valgfri) Filtrer paa aktivitetsnummer",
+        "workDescriptionName": "(valgfri) Filtrer paa aktivitetsnavn",
+        "all": "(valgfri) Inkluder inaktive",
+        "active": "(valgfri) Kun aktive"
+      },
+      "respons_felter": {
+        "Id": "integer",
+        "Name": "string",
+        "Number": "string",
+        "IsActive": "boolean",
+        "Price": "number",
+        "InternalRate": "number"
+      },
+      "merknad": "Flat liste med aktiviteter/arbeidsbeskrivelser. Kalles WorkDescriptions i API, men 'Aktiviteter' i SmartDok-grensesnittet.",
+      "tilgang": "OK"
+    },
+    "POST /WorkDescriptions": {
+      "metode": "POST",
+      "sti": "/WorkDescriptions",
+      "parametere": {
+        "body": "WorkDescription-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppretter ny aktivitet.",
+      "tilgang": "OK"
+    },
+    "GET /WorkDescriptions/{id}": {
+      "metode": "GET",
+      "sti": "/WorkDescriptions/{id}",
+      "parametere": {
+        "id": "(paakreved) Aktivitet-Id"
+      },
+      "respons_felter": {
+        "_same_as": "GET /WorkDescriptions (enkelt objekt)"
+      },
+      "merknad": "Henter enkelt aktivitet.",
+      "tilgang": "OK"
+    },
+    "PUT /WorkDescriptions/{id}": {
+      "metode": "PUT",
+      "sti": "/WorkDescriptions/{id}",
+      "parametere": {
+        "id": "(paakreved) Aktivitet-Id",
+        "body": "Oppdatert WorkDescription-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Oppdaterer eksisterende aktivitet.",
+      "tilgang": "OK"
+    }
+  },
+
+  "WorkHours": {
+    "GET /WorkHours": {
+      "metode": "GET",
+      "sti": "/WorkHours",
+      "parametere": {
+        "fromDate": "(paakreved) ISO 8601 startdato",
+        "toDate": "(paakreved) ISO 8601 sluttdato",
+        "includeExported": "(valgfri) Inkluder eksporterte timer",
+        "onlyAttested": "(valgfri) Kun attesterte timer",
+        "includeMachineHours": "(valgfri) Inkluder maskintimer",
+        "includeWagesMarkedNoExport": "(valgfri) Inkluder loennsarter merket 'ikke eksporter'",
+        "projectId": "(valgfri) Filtrer paa prosjekt",
+        "subProjectId": "(valgfri) Filtrer paa delprosjekt",
+        "areaId": "(valgfri) Filtrer paa omraade",
+        "exportedExternal": "(valgfri) Filtrerer paa ekstern eksportstatus",
+        "exportedExternalId": "(valgfri) Filtrer paa ekstern eksport-Id",
+        "absence": "(valgfri) Kun fravaer",
+        "includeHourBankHours": "(valgfri) Inkluder timebankregistreringer",
+        "includeAllowanceMarkedNoExport": "(valgfri) Inkluder godtgjoerelser merket 'ikke eksporter'",
+        "lastUpdated": "(valgfri) ISO 8601 dato — kun poster oppdatert etter denne dato"
+      },
+      "respons_felter": {},
+      "merknad": "Krever fromDate og toDate. Returnerer 400 uten disse. v1-format. Bruk /WorkHours/v2 for ny integrasjon.",
+      "tilgang": "OK"
+    },
+    "GET /WorkHours/v2": {
+      "metode": "GET",
+      "sti": "/WorkHours/v2",
+      "parametere": {
+        "offset": "(valgfri) Startposisjon i resultatsett",
+        "count": "(valgfri) Antall poster per kall",
+        "fromDate": "(valgfri) ISO 8601 startdato",
+        "toDate": "(valgfri) ISO 8601 sluttdato",
+        "projectId": "(valgfri) Filtrer paa prosjekt",
+        "subProjectId": "(valgfri) Filtrer paa delprosjekt",
+        "areaId": "(valgfri) Filtrer paa omraade",
+        "lastUpdated": "(valgfri) ISO 8601 dato — kun poster oppdatert etter denne dato",
+        "approved": "(valgfri) Kun godkjente timer",
+        "absence": "(valgfri) Kun fravaer"
+      },
+      "respons_felter": {
+        "Id": "integer",
+        "UserId": "string (UUID)",
+        "Date": "string (ISO 8601)",
+        "TimeFrom": "string (HH:mm)",
+        "TimeTo": "string (HH:mm)",
+        "BreakTime": "string (HH:mm)",
+        "BreakStart": "string|null",
+        "HourBankDeposit": "string",
+        "ProjectId": "integer",
+        "SubProjectId": "integer|null",
+        "ActivityId": "integer",
+        "ActivityCategoryId": "integer|null",
+        "WageId": "integer",
+        "WageComment": "string",
+        "DepartmentId": "integer",
+        "AreaId": "integer|null",
+        "ElementId": "integer|null",
+        "Comment": "string",
+        "AdminComment": "string|null",
+        "AvailabilityTime": "string|null",
+        "DaytimeId": "integer|null",
+        "AllowanceId": "integer|null",
+        "AllowanceComment": "string",
+        "RegistrationType": "string",
+        "RegistrationNumber": "string",
+        "AdditionRegistrations": "array [{WageId: integer, Amount: number, Comment: string|null}]",
+        "MachineHourRegistrations": "array [{MachineId: integer, Hours: string}]",
+        "LastUpdated": "string (ISO 8601)"
+      },
+      "merknad": "Paginert. 157125 timeregistreringer hos AH AS. Anbefalt for ny integrasjon. Stoetter dato- og prosjektfiltrering samt lastUpdated for inkrementell synkronisering.",
+      "tilgang": "OK"
+    },
+    "GET /WorkHours/{id}": {
+      "metode": "GET",
+      "sti": "/WorkHours/{id}",
+      "parametere": {
+        "id": "(paakreved) Timeregistrering-Id"
+      },
+      "respons_felter": {
+        "_same_as": "GET /WorkHours/v2 (enkelt objekt)"
+      },
+      "merknad": "Henter enkelt timeregistrering. 404 om Id ikke finnes.",
+      "tilgang": "OK"
+    },
+    "POST /WorkHours": {
+      "metode": "POST",
+      "sti": "/WorkHours",
+      "parametere": {
+        "body": "WorkHour-objekt (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Registrerer nye arbeidstimer.",
+      "tilgang": "OK"
+    },
+    "POST /WorkHours/MarkAsExported": {
+      "metode": "POST",
+      "sti": "/WorkHours/MarkAsExported",
+      "parametere": {
+        "body": "Array med Id-er (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Markerer timeregistreringer som eksportert.",
+      "tilgang": "OK"
+    },
+    "POST /WorkHours/SetExportedExternal": {
+      "metode": "POST",
+      "sti": "/WorkHours/SetExportedExternal",
+      "parametere": {
+        "exportedExternalId": "(valgfri) Ekstern eksport-Id",
+        "setAsExportedExternal": "(valgfri) true/false",
+        "body": "Array med Id-er (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Markerer timeregistreringer som eksportert til eksternt system.",
+      "tilgang": "OK"
+    },
+    "POST /WorkHours/UnmarkExportedExternal": {
+      "metode": "POST",
+      "sti": "/WorkHours/UnmarkExportedExternal",
+      "parametere": {
+        "exportedExternalId": "(valgfri) Ekstern eksport-Id",
+        "body": "Array med Id-er (JSON)"
+      },
+      "respons_felter": {},
+      "merknad": "Fjerner ekstern eksport-markering fra timeregistreringer.",
+      "tilgang": "OK"
+    }
+  },
+
+  "QualityDeviation": {
+    "GET /qd": {
+      "metode": "GET",
+      "sti": "/qd",
+      "deprecated": true,
+      "parametere": {
+        "lastUpdatedSince": "(valgfri) ISO 8601 dato",
+        "projectId": "(valgfri) Filtrer paa prosjekt",
+        "subprojectId": "(valgfri) Filtrer paa delprosjekt",
+        "qdStatus": "(valgfri) Filtrer paa status (Close, Open, New, Unprocessed, Discarded)"
+      },
+      "respons_felter": {
+        "Id": "integer (intern Id, bruk i URL-er)",
+        "ProjectId": "integer",
+        "SubProjectId": "integer|null",
+        "SubmitDate": "string (ISO 8601)",
+        "SubmitterName": "string",
+        "CaseWorkerName": "string",
+        "Status": "string (Close, Open, New, Unprocessed, Discarded)",
+        "Title": "string",
+        "Lat": "number|null",
+        "Lon": "number|null",
+        "Accuracy": "number|null",
+        "EventId": "integer (brukersynlig nummer i UI)"
+      },
+      "merknad": "DEPRECATED. Bruk /qd/v2 for utvidede felter. Paginert. 26 avvik hos AH AS. Statusverdier bruker 'Close' (ikke 'Closed').",
+      "tilgang": "OK"
+    },
+    "GET /qd/v2": {
+      "metode": "GET",
+      "sti": "/qd/v2",
+      "parametere": {
+        "lastUpdatedSince": "(valgfri) ISO 8601 dato",
+        "projectId": "(valgfri) Filtrer paa prosjekt",
+        "subprojectId": "(valgfri) Filtrer paa delprosjekt",
+        "qdStatus": "(valgfri) Filtrer paa status (Close, Open, New, Unprocessed, Discarded)"
+      },
+      "respons_felter": {
+        "Id": "integer",
+        "Status": "string",
+        "SubmitDate": "string (ISO 8601)",
+        "Title": "string",
+        "Description": "string (beskrivelse av avviket)",
+        "EventId": "integer (brukersynlig nummer)",
+        "ProjectId": "integer",
+        "SubProjectId": "integer|null",
+        "SubmitterName": "string",
+        "CaseWorkerName": "string",
+        "Lat": "number|null",
+        "Lon": "number|null",
+        "Accuracy": "number|null",
+        "Cause": "string (aarsak)",
+        "Concerning": "string (gjelder)",
+        "RelatesTo": "string (relatert til)"
+      },
+      "merknad": "v2 med utvidede felter (Description, Cause, Concerning, RelatesTo). Anbefalt for ny integrasjon.",
+      "tilgang": "OK"
+    },
+    "GET /qd/{deviationId}/pdf": {
+      "metode": "GET",
+      "sti": "/qd/{deviationId}/pdf",
+      "parametere": {
+        "deviationId": "(paakreved) Intern Id (IKKE EventId)",
+        "includeDetails": "(valgfri) Inkluder ekstra detaljer i PDF"
+      },
+      "respons_felter": {
+        "FileSize": "integer",
+        "FileDate": "string",
+        "Filename": "string",
+        "DownloadUrl": "string (pre-signert S3-URL, gyldig 24 timer)"
+      },
+      "merknad": "Eneste maate aa hente full QD-info paa. GET /qd/{id} returnerer 404 (kjent API-begrensning).",
+      "tilgang": "OK"
+    }
+  },
+
+  "RUE": {
+    "GET /rue": {
+      "metode": "GET",
+      "sti": "/rue",
+      "deprecated": true,
+      "parametere": {
+        "lastUpdatedSince": "(valgfri) ISO 8601 dato",
+        "projectId": "(valgfri) Filtrer paa prosjekt",
+        "subprojectId": "(valgfri) Filtrer paa delprosjekt",
+        "rueStatus": "(valgfri) Filtrer paa status (Close, Open, New, Unprocessed, Discarded)"
+      },
+      "respons_felter": {
+        "Id": "integer",
+        "ProjectId": "integer",
+        "SubProjectId": "integer|null",
+        "SubmitDate": "string (ISO 8601)",
+        "SubmitterName": "string",
+        "CaseWorkerName": "string",
+        "Status": "string (Close, Open, New, Unprocessed, Discarded)",
+        "Title": "string",
+        "Lat": "number|null",
+        "Lon": "number|null",
+        "Accuracy": "number|null",
+        "EventId": "integer (brukersynlig nummer i UI)"
+      },
+      "merknad": "DEPRECATED. Bruk /rue/summaries for v2-format. Paginert. 300 RUE-hendelser hos AH AS. Status bruker 'Close' (ikke 'Closed').",
+      "tilgang": "OK"
+    },
+    "GET /rue/summaries": {
+      "metode": "GET",
+      "sti": "/rue/summaries",
+      "parametere": {
+        "LastUpdatedSince": "(valgfri) ISO 8601 dato",
+        "ProjectId": "(valgfri) Filtrer paa prosjekt",
+        "SubprojectId": "(valgfri) Filtrer paa delprosjekt",
+        "RueStatus": "(valgfri) Filtrer paa status",
+        "Offset": "(valgfri) Startposisjon",
+        "Count": "(valgfri) Antall per kall"
+      },
+      "respons_felter": {
+        "Id": "integer",
+        "EventId": "integer (brukersynlig nummer)",
+        "Title": "string",
+        "Status": "string (Close, Open, New, Unprocessed, Discarded)",
+        "Severity": "string (alvorlighetsgrad)",
+        "SubmitDate": "string (ISO 8601, naar registrert)",
+        "EventTime": "string (ISO 8601, naar det skjedde — kan vaere null)",
+        "DeadlineDateTime": "string|null",
+        "ProjectId": "integer",
+        "SubProjectId": "integer|null",
+        "OwnerId": "string (UUID, saksbehandler)",
+        "SubmitterId": "string (UUID, innmelder)"
+      },
+      "merknad": "Anbefalt for ny integrasjon. Paginert. Inkluderer Severity, EventTime, DeadlineDateTime, OwnerId, SubmitterId som mangler i /rue.",
+      "tilgang": "OK"
+    },
+    "GET /rue/{id}": {
+      "metode": "GET",
+      "sti": "/rue/{id}",
+      "parametere": {
+        "id": "(paakreved) Intern Id (IKKE EventId)"
+      },
+      "respons_felter": {
+        "_description": "Full RUE-detalj inkl. beskrivelse, tiltak, klassifisering (Values-array)"
+      },
+      "merknad": "Bruker intern Id (f.eks. 1464174), ikke EventId (f.eks. 1004). 404 om Id ikke finnes.",
+      "tilgang": "OK"
+    },
+    "GET /rue/{id}/eventlog": {
+      "metode": "GET",
+      "sti": "/rue/{id}/eventlog",
+      "parametere": {
+        "id": "(paakreved) Intern Id"
+      },
+      "respons_felter": {},
+      "merknad": "Henter hendelseslogg for en RUE-rapport (statusendringer, kommentarer osv.).",
+      "tilgang": "OK"
+    },
+    "GET /rue/{id}/messages": {
+      "metode": "GET",
+      "sti": "/rue/{id}/messages",
+      "parametere": {
+        "id": "(paakreved) Intern Id"
+      },
+      "respons_felter": {},
+      "merknad": "Henter meldinger/kommentarer knyttet til en RUE-rapport.",
+      "tilgang": "OK"
+    },
+    "GET /rue/{reportId}/pdf": {
+      "metode": "GET",
+      "sti": "/rue/{reportId}/pdf",
+      "parametere": {
+        "reportId": "(paakreved) Intern Id",
+        "includeDetails": "(valgfri) Inkluder ekstra detaljer i PDF"
+      },
+      "respons_felter": {
+        "FileSize": "integer",
+        "FileDate": "string",
+        "Filename": "string",
+        "DownloadUrl": "string (pre-signert S3-URL, gyldig 24 timer)"
+      },
+      "merknad": "PDF-nedlasting for en RUE-hendelse. DownloadUrl er en pre-signert S3-URL.",
+      "tilgang": "OK"
+    }
+  },
+
+  "SafeJobAnalysis": {
+    "POST /sja/overview": {
+      "metode": "POST",
+      "sti": "/sja/overview",
+      "parametere": {
+        "body": "Filter-objekt (JSON) for aa soeke SJA-dokumenter"
+      },
+      "respons_felter": {},
+      "merknad": "Henter SJA-dokumenter basert paa filter (POST fordi filteret kan vaere komplekst).",
+      "tilgang": "OK"
+    },
+    "GET /sja/potential_hazards": {
+      "metode": "GET",
+      "sti": "/sja/potential_hazards",
+      "parametere": {},
+      "respons_felter": {
+        "Id": "integer",
+        "Key": "string (f.eks. 'SJA.potential_hazard.falling')",
+        "Name": "string (norsk navn)"
+      },
+      "merknad": "Liste over potensielle farer for SJA-skjemaer.",
+      "tilgang": "OK"
+    },
+    "GET /sja/reasons": {
+      "metode": "GET",
+      "sti": "/sja/reasons",
+      "parametere": {},
+      "respons_felter": {
+        "Id": "integer",
+        "Key": "string (f.eks. 'SJA.reason.deviates-from-description')",
+        "Name": "string (norsk navn)"
+      },
+      "merknad": "Liste over aarsaker til at SJA trengs.",
+      "tilgang": "OK"
+    }
+  },
+
+  "_tilgangsoppsummering": {
+    "beskrivelse": "Oversikt over endepunkter som returnerer 401 med vaar API-noekkel",
+    "401_endepunkter": {
+      "Areas": "Krever AreaRead",
+      "Customers": "Krever CustomersRead",
+      "GoodsLocations": "Krever GoodsLocationsRead",
+      "MachineCategories": "Krever MachineCategoriesRead",
+      "News": "Krever NewsPostRead",
+      "OrderTypes": "Krever OrderTypeRead",
+      "Orders": "Krever OrdersRead (alle deprecated)",
+      "OrderWorkers": "Krever OrderWorkersRead",
+      "ResourcePlanning": "Krever ResourcePlanningRead",
+      "Tools": "Krever ToolsRead",
+      "ToolCategories": "Krever ToolCategoriesRead",
+      "ToolLocations": "Krever ToolLocationsRead",
+      "TripToFromWorkAddition": "Krever TripToFromWorkAdditionRead",
+      "WorkDescriptionCategory": "Krever ActivityCategoriesRead"
+    },
+    "merknad": "Disse tilgangene maa aktiveres i SmartDok-administrasjonen for API-noekkelens tilgangsnivaa."
+  },
+
+  "_api_gotchas": {
+    "paginering": "Alle listeendepunkter returnerer {Count, Offset, TotalCount, Items[]}. Standard count=100.",
+    "ingen_serverfiltrering": "/Projects, /Users, /rue, /qd returnerer ALT — filtrer klientside.",
+    "forms_maks_32_dager": "/Forms (v1) krever startDate/endDate med maks 32 dagers intervall. Loop i blokker.",
+    "forms_v2_ingen_begrensning": "/Forms/v2 har ingen datointervall-begrensning. Bruker lastUpdatedSince.",
+    "projectnumber_trailing_spaces": "ProjectNumber kan ha trailing spaces — bruk alltid .trim().",
+    "id_vs_eventid": "Id = intern database-Id (bruk i URL-er). EventId = brukersynlig nummer i UI.",
+    "status_close_ikke_closed": "RUE/QD bruker 'Close' (ikke 'Closed'). Verdier: Close, Open, New, Unprocessed, Discarded.",
+    "submitdate_vs_eventtime": "SubmitDate = naar registrert. EventTime = naar det skjedde (kan vaere null).",
+    "calcuated_skrivefeil": "Prosjekter har baade 'CalcuatedTimeConsumption' (skrivefeil) og 'CalculatedTimeConsumption'. Begge returnerer 0.",
+    "qd_detail_404": "GET /qd/{id} returnerer alltid 404. Full QD-info kun via /qd/{id}/pdf.",
+    "bruker_id_er_uuid": "User-Id er UUID (streng), ikke integer. Vises som SubmitterId, OwnerId, HSEResponsibleId osv.",
+    "classification_engelsk": "Klassifiseringsverdier i API er paa engelsk, men vises paa norsk i UI.",
+    "gamle_prosjekter_mangler": "Historiske RUE/QD kan referere til ProjectId-er som ikke lenger finnes i /Projects."
+  }
+}

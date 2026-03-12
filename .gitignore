@@ -21,6 +21,18 @@ npm-debug.log*
 # vercel
 .vercel
 
+# credentials
+credentials.env
+*.env
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel
+
+# python
+__pycache__/
+*.pyc
+output/
+~$*
